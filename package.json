@@ -1,0 +1,19 @@
+{
+  "name": "lecto",
+  "version": "1.0.0",
+  "description": "Academic Twitch",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/david8zhang/lecto.git"
+  },
+  "author": "David Zhang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/david8zhang/lecto/issues"
+  },
+  "homepage": "https://github.com/david8zhang/lecto#readme"
+}

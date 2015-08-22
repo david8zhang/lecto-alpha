@@ -1,0 +1,38 @@
+<html>
+	<style>
+		.button{
+			padding:5px 15px; background:#ccc; border:0 none;
+			cursor:pointer;
+			-webkit-border-radius: 5px;
+			border-radius: 5px; 
+		}
+
+	</style>
+	<head>
+		<!-- Boostrap components -->
+        <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<h1>Login</h1>
+		<br>
+		<br>
+	
+	</head>
+	<body align="center">
+		<div>
+			<form action='/login' method='post'>
+			<label for="name">Username: </label>
+			<input type="text" id="name" name="username" placeholder="Enter a Username" required>
+			<br>
+			<br>
+			<label for="name">Password: </label>
+			<input type="password" id="pass" name="password" placeholder="Enter a Password" required>
+			<br><br>
+			<input type="submit" class="button" value="Log in"/>
+
+		</form>
+
+		</div>
+
+	</body>
+	
+</html>
