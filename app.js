@@ -54,12 +54,33 @@ app.get('/classes', function(req, res){
 	res.render('classes');
 })
 
+//Post login information
+
+
 /*********************************SOCKET IO*************************************/
 io.on('connection', function(client){
 	console.log('connected...')
 })
 
 //Define passport authentication strategy here
+
+
+/*********************************FUNCTIONS**************************************/
+function register(username, password){
+	var params = {};
+	params.TableName = 'lecto-teachers';
+
+	//Add more parameters later (comments, reviews)
+	params.Item = {username: username, password: password};
+	docClient.putItem(params, function(err, data){
+		if(err){
+			console.log(err, err.stack)
+		} else {
+			console.log("Account successfully created!");
+		}
+	})
+}
+
 
 //Use bower components(JQuery)
 app.use(express.static(__dirname + 'bower_components'));
