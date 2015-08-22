@@ -7,12 +7,20 @@
 			border-radius: 5px; 
 		}
 		
-		body{
-			background-img=url("/images/loginBackground.jpg");
+		.container {
+			width:75%;
 		}
 		
+		.body{
+			background-color:#B6C5D5;
+		}
 		
-
+		input{
+		  padding: 10px;
+		  border: solid 1px #dcdcdc;
+		  transition: box-shadow 0.3s, border 0.3s;
+		}
+		
 	</style>
 	<head>
 		<!-- Boostrap components -->
@@ -20,30 +28,34 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<br>
 		<br>
-	
 	</head>
 	
-	<body align="center">
-		<div class="panel panel-default">
-			<div class="">	
-				<h3>Login</h3>
-			</br>
-				<form action='/login' method='post'>
-					<label for="name">Username: </label>
-					<input type="text" id="name" name="username" placeholder="Enter a Username" required>
-					<br>
-					<br>
-					<label for="name">Password: </label>
-					<input type="password" id="pass" name="password" placeholder="Enter a Password" required>
-					<br><br>
-					<input type="submit" class="button" value="Log in"/>
-					<br><br>
-					<a href="/register">Don't have an account? Register now!</a>
-
-				</form>
+	<body align="center" class="body">
+		<div class="container">		
+			<div class="panel panel-default">
+				<div class="panel-heading">
+						<h3>Login</h3>
+				</div>
+				
+				<div class="panel-body">
+				</br>
+					<form action='/login' method='post'>
+						<label for="name">Username: </label>
+						<input type="text" id="name" name="username" placeholder="Enter a Username" required>
+						<br>
+						<br>
+						<label for="name">Password: </label>
+						<input type="password" id="pass" name="password" placeholder="Enter a Password" required>
+						<br>
+						<br>
+						<input type="submit" class="btn btn-primary" value="Log in"/>
+						<br>
+						<br>
+						<a href="/register">Don't have an account? Register now!</a>
+					</form>
+				</div>
 			</div>
 		</div>
-
 
 
 	</body>
