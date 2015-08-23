@@ -38,35 +38,95 @@ app.use(expressSession({ secret: 'secret',
 	}));
 
 //Register passport middleware
-// app.use(passport.initialize());
-// app.use(passport.session);
+app.use(passport.initialize());
+app.use(passport.session());
+
+/****************************PASSPORT AUTHENTICATION STRATEGY**************************/
+
+//Define passport authentication strategy here
+passport.use(new passportLocal.Strategy(function(username, password, done){
+	var queryParams = {};
+	queryParams.TableName = 'lecto-teachers';
+	queryParams.KeyConditions = [docClient.Condition('username', 'EQ', username)];
+	queryParams.QueryFilter = docClient.Condition('password', 'EQ', password);
+	docClient.query(queryParams, function(err, result){
+		if(err){
+			done(new Error('Oh Shit!'));
+			console.log(err, err.stack)
+		} else {
+			jsonString = JSON.parse(JSON.stringify(result))
+			if(jsonString["Count"] == 0){
+				done(null, null)
+			} else {
+				done(null, {id: username, name: jsonString["Items"].username});
+			}
+		}
+	})
+})); 
+
+passport.serializeUser(function(user, done){
+	done(null, user.id)
+})
+
+passport.deserializeUser(function(id, done){
+	//Query the database or cache here
+	done(null, {id: id, name: id})
+})
+
 
 /**********************************ROUTES**********************************/
 //Get the homepage
 app.get('/', function(req, res){
 	res.render('index');
-})
+});
 
 //Get the login page
 app.get('/login', function(req, res){
 	res.render('login');
-})
+});
 
 //Get the classes page
 app.get('/classes', function(req, res){
 	res.render('classes');
+});
+
+//get the registration page
+app.get('/register', function(req, res){
+	res.render('register')
+});
+
+//Get the dashboard
+app.get('/dashboard', function(req, res){
+	res.render('dashboard', {
+		isAuthenticated: req.isAuthenticated(),
+		username: req.user.name
+	})
 })
 
+//post registration information
+app.post('/register', function(req, res){
+	username = req.body.name;
+	password = req.body.pass;
+
+	register(username, password)
+	res.redirect('/')
+});
+
 //Post login information
+app.post('/login', passport.authenticate('local'), function(req, res){
+	res.redirect('/dashboard')
+});
+
+app.get('/logout', function(req, res){
+	req.logout();
+	res.redirect('/')
+});
 
 
 /*********************************SOCKET IO*************************************/
 io.on('connection', function(client){
 	console.log('connected...')
 })
-
-//Define passport authentication strategy here
-
 
 /*********************************FUNCTIONS**************************************/
 function register(username, password){
