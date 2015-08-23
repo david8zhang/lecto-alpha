@@ -1,22 +1,45 @@
 <html>
+	<style>
+		body {
+			background-color: #000000;
+			background-image:url('/images/startSession.jpg');
+			background-repeat: no-repeat;
+			background-size: 100%;
+		}
+
+		li{
+			margin-top: 10px;
+		}
+
+	</style>
 	<head>
 		<!-- Boostrap components -->
         <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/animate.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
 		<nav class="navbar navbar-default navbar-fixed-top">
-		  <div class="container-fluid">
-		   		<a href="#" class="navbar-brand"><%= username %></a>
+
+		  <div class="container">
+
+				<a href="#" class="navbar-brand">Teach</a>
+				<ul class="nav navbar-left">
+					<li role="presentation"><a href="/classes"><b>Learn</b></a></li>
+				</ul>
+
 		   		<a href="/logout" class="navbar-text navbar-right">Log Out</a>
+		  		<p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link"><%= username %></a></p>
 		   </div>
 		</nav>
 	</head>
 
 	<body>
-		<br><br>
+		<br>
+		<br>
+		<br>
 		<div class="jumbotron text-center">
 			<!-- Make this Idea thing cycle through a list of ideas stored locally -->
-				<a class="btn btn-primary btn-lg" href="/session" role="button">Start a session</a>
+			<a class="btn btn-primary btn-lg" href="/session" role="button">Start a session</a>
 		</div>
 	</body>
 
