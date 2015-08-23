@@ -1,0 +1,44 @@
+<html>
+	<head>
+		<!-- Boostrap components -->
+        <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<script type="text/javascript" src="/adapter.js"></script>
+		<script src="/latest.js"></script>
+
+
+		<meta name="keywords" content="JavaScript, WebRTC" />
+		<meta name="description" content="WebRTC codelab" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1">
+
+	</head>
+
+	<body>
+		<div id='videos'>
+			<video id='localVideo' autoplay></video>
+			<div id="remoteVideos"></div>
+		</div>
+
+		<div>
+			<button id="startButton">Start</button>
+			<button id="callButton">Call</button>
+			<button id="hangupButton">Hang Up</button>
+		</div>
+		
+		<button id="sendButton" disabled>Send</button>
+
+	</body>
+
+	<script>
+		var webrtc = new SimpleWebRTC({
+			localVideoEl: 'localVideo',
+			remoteVideosEl: 'remoteVideos',
+			autoRequestMedia: true
+		});
+
+		webrtc.on('readyToCall', function () {
+			webrtc.joinRoom('My room name');
+		});
+	</script>
+
+</html>
