@@ -1,5 +1,11 @@
 <html>
 	<style>
+<<<<<<< HEAD
+=======
+		.hidden{
+			visibility:hidden;
+		}
+>>>>>>> master
 		#remoteVideos {
 			opacity: 0;
 		}
@@ -29,6 +35,7 @@
 			visibility:hidden;
 		}
 	</style>
+
 	<head>
 		<!-- Boostrap components -->
         <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
@@ -61,7 +68,8 @@
 				<div id="remoteVideos"></div>
 			</div>	
 		</div>
-		
+
+		<div class="hidden" id="keyholder"><%=sessionid%></div>
 		<div class="container">
 			<div class="panel panel-default">
 				<div class="panel-heading">
@@ -73,8 +81,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="hidden" id="keyholder"><%=sessionid%></div>
-
 	</body>
 
 	<script>
