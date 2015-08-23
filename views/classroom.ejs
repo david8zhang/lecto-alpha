@@ -1,4 +1,9 @@
 <html>
+	<style>
+		.hidden{
+			visibility:hidden;
+		}
+	</style>
 	<head>
 		<!-- Boostrap components -->
         <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
@@ -25,11 +30,14 @@
 			<button id="hangupButton">Hang Up</button>
 		</div>
 		
-		<button id="sendButton" disabled>Send</button>
+		<button id="sendButton" onclick="">Send</button>
+		<div class="hidden" id="keyholder"><%=sessionid%></div>
 
 	</body>
 
 	<script>
+		var sessID = document.getElementById("keyholder").innerHTML;
+		console.log(sessID);
 		var webrtc = new SimpleWebRTC({
 			localVideoEl: 'localVideo',
 			remoteVideosEl: 'remoteVideos',
@@ -37,7 +45,7 @@
 		});
 
 		webrtc.on('readyToCall', function () {
-			webrtc.joinRoom('My room name');
+			webrtc.joinRoom(sessID);
 		});
 	</script>
 
