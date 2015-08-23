@@ -7,6 +7,24 @@
 		li{
 			margin-top: 10px;
 		}
+
+		.navbar {
+			box-shadow: 0 5px 5px #333;
+		}
+
+		.col-md-2 {
+			background-color: white;
+			padding: 10px;
+			margin: 15px 5px 10px 10px;
+			height: 240px;
+			box-shadow:0 3px 1px #666;
+			border-radius: 3px;
+		}
+
+		img {
+			height:75%%;
+			width:100%;
+		}
 		
 		.hiddenform{
 			visibility:hidden;
@@ -19,7 +37,6 @@
 
 		<nav class="navbar navbar-default navbar-fixed-top">
 		  <div class="container">
-		  
 			<a href="#" class="navbar-brand">Learn</a>
 			<ul class="nav nav-pills">
 				<li role="presentation"><a href="/login"><b>Teach</b></a></li>
@@ -29,15 +46,19 @@
 	</head>
 	
 	<body class="body">
-		<br><br><br>
-		<% classList.forEach(function(user){ %> 
-			<a href="#" onclick="clickHandler(event)"><%=user%></a>
-		<%	}); %>
-		<form class="hiddenform" id="someform" action="/student" method='post'>
-			<input type="text" id="sessionID" name="sessionID">
-			<input type="submit">
-		</form>
-
+		<br>
+		<br>
+		<br>
+		<div class="container">
+			<h1 class="text-center">Classes</h1>
+			<div class="row">
+				<% classList.forEach(function(user){ %> 
+					<div class="col-md-2 text-center">
+						<a href="/student"><%=user%></a>
+					</div>
+				<%	}); %>
+			</div>
+		</div>
 	</body>
 
 
