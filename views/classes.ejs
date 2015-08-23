@@ -8,6 +8,9 @@
 			margin-top: 10px;
 		}
 		
+		.hiddenform{
+			visibility:hidden;
+		}
 	</style>
 	<head>
 		<!-- Boostrap components -->
@@ -28,14 +31,26 @@
 	<body class="body">
 		<br><br><br>
 		<% classList.forEach(function(user){ %> 
-			<a href="/student"><%=user%></a>
+			<a href="#" onclick="clickHandler(event)"><%=user%></a>
 		<%	}); %>
+		<form class="hiddenform" id="someform" action="/student" method='post'>
+			<input type="text" id="sessionID" name="sessionID">
+			<input type="submit">
+		</form>
+
 	</body>
+
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
 	<script src="/socket.io/socket.io.js"></script>  
 
-	<script>	
+	<script>
+		function clickHandler(event){
+			var input = document.getElementById("sessionID");
+			input.value = event.target.innerHTML;
+			var someForm = document.getElementById("someform");
+			someForm.submit();
+		}
 		
 	</script> 
 

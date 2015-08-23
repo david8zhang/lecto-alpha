@@ -137,11 +137,21 @@ app.get('/session', function(req, res){
 	});
 })
 
+app.get('/student', function(req, res){
+	var sessID = req.query.sid;
+	res.render('student', {
+		room: sessID
+	})
+})
+
 //Get the sessions
 app.get('/classroom', function(req, res){
 	getSession(req.user.name, function(result){
 		res.render('classroom', {
-			sessionid: result
+			sessionid: result[0],
+			subject: result[1],
+			price: result[2],
+			title: result[3]
 		})
 	})
 })
@@ -153,6 +163,11 @@ app.post('/register', function(req, res){
 
 	register(username, password)
 	res.redirect('/')
+});
+
+app.post('/student', function(req, res){
+	var sid = encodeURIComponent(req.body.sessionID);
+	res.redirect('/student?sid=' + sid);
 });
 
 //Post login information
@@ -217,7 +232,7 @@ function getSession(username, callback){
 			jsonString = JSON.parse(JSON.stringify(result))
 			console.log(jsonString)
 			var sessionid = jsonString["Item"].title + " " + jsonString["Item"].name;
-			callback(sessionid);
+			callback([sessionid, jsonString["Item"].subject, jsonString["Item"].price, jsonString["Item"].title]);
 		}
 	})
 }

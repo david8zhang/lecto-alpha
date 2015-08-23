@@ -4,7 +4,13 @@
 			visibility:hidden;
 		}
 		#remoteVideos {
-			opacity: 0;
+			margin:5px;
+			border: 0 solid #333;
+			border-top: 15px solid #333;
+			border-bottom: 15px solid #333;
+			border-left: 15px solid #333;
+			border-right: 15px solid #333;
+			visibility:hidden;
 		}
 
 		li{
@@ -16,12 +22,7 @@
 		}
 
 		#localvideo{
-			margin:5px;
-			border: 0 solid #333;
-			border-top: 15px solid #333;
-			border-bottom: 15px solid #333;
-			border-left: 15px solid #333;
-			border-right: 15px solid #333;
+			visibility: hidden;
 		}
 
 		.navbar {
@@ -43,9 +44,9 @@
 
 		<nav class="navbar navbar-default navbar-fixed-top">
 			<div class="container">
-				<a href="#" class="navbar-brand">Teach</a>
+				<a href="/login" class="navbar-brand">Teach</a>
 				<ul class="nav nav-pills">
-					<li role="presentation"><a href="/dashboard"><b>End Session</b></a></li>
+					<li role="presentation"><a href="/"><b>Leave Session</b></a></li>
 				</ul>
 			</div>
 		</nav>	
@@ -63,15 +64,15 @@
 		</div>
 		
 
-		<div class="hidden" id="keyholder"><%=sessionid%></div>
+		<div class="hidden" id="keyholder"><%=room%></div>
 		<div class="container">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h1><%=title%></h1>
-					<h3><%=subject%></h3>
+					<h1>Enter Title</h1>
+					<h3>Enter Subject</h3>
 				</div>
 				<div class="panel-body">
-					<p>The price for video/premium on this lecture is $<%=price%></p>
+					<p>The price for video/premium on this lecture is $</p>
 				</div>
 			</div>
 		</div>
@@ -82,10 +83,12 @@
 		var sessID = document.getElementById("keyholder").innerHTML;
 		console.log(sessID);
 		var webrtc = new SimpleWebRTC({
-			localVideoEl: 'localVideo',
-			autoRequestMedia: true
+			remoteVideosEl: 'remoteVideos',
+			autoRequestMedia: true,
+			autoRemoveVideos: true,
+			media: {video: false, audio: true}
 		});
-		
+
 		webrtc.on('readyToCall', function () {
 			webrtc.joinRoom(sessID);
 		});
