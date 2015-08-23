@@ -1,34 +1,64 @@
 <html>
 	<style>
-		.button{
-			padding:5px 15px; background:#ccc; border:0 none;
-			cursor:pointer;
-			-webkit-border-radius: 5px;
-			border-radius: 5px; 
+		.body{
+			background-color:#B6C5D5;
+		}
+
+		input{
+		    padding: 10px;
+			border: solid 1px #eeeeee;
+			box-shadow: inset 1px 1px 2px 0 #111111;
+		}
+
+		li{
+			margin-top: 10px;
 		}
 
 	</style>
 	<head>
 		<!-- Boostrap components -->
         <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/animate.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-		<h1>Create an Account</h1>
-		<br>
-		<br>
-	
+
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container">
+				<a href="#" class="navbar-brand">Teach</a>
+				<ul class="nav nav-pills">
+					<li role="presentation"><a href="/classes"><b>Learn</b></a></li>
+				</ul>
+			</div>
+		</nav>	
 	</head>
-	<body align="center">
-		<div>
-			<form action='/register' method='post'>
-			<label for="name">Username: </label>
-			<input type="text" id="name" name="name" placeholder="Enter a username">
-			<br>
-			<br>
-			<label for="name">Password: </label>
-			<input type="password" id="pass" name="pass" placeholder="Enter a password">
-			<br><br>
-			<input type="submit" class="button" value="Create Account"/>
-			</form>
+
+	<body align="center" class="body">
+		<br>
+		<br>
+		<br>
+		<br>
+		<br>
+		<div class="container">
+			<div class="panel panel-default">
+
+				<div class="panel-heading animated fadeIn">
+					<h1>Create an Account</h1>
+				</div>
+				
+				<div class="panel-body">
+					<br>
+					<form action='/register' method='post'>
+						<label for="name">Username: </label>
+						<input type="text" id="name" name="name" placeholder="Enter a username" required>
+						<br>
+						<br>
+						<label for="name">Password: </label>
+						<input type="password" id="pass" name="pass" placeholder="Enter a password" required>
+						<br>
+						<br>
+						<input type="submit" class="btn btn-primary" value="Create Account"/>
+					</form>
+				</div>
+			</div>
 		</div>
 	</body>
 
