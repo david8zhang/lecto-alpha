@@ -1,0 +1,60 @@
+<html>
+	<style>
+		.title-padding{
+			margin-left: 25px;
+			margin-bottom: -10px;
+		}
+		.big{
+			font-size: 50px;
+		}
+		.button{
+			padding:5px 15px; background:#ccc; border:0 none;
+			cursor:pointer;
+			-webkit-border-radius: 5px;
+			border-radius: 5px; 
+		}
+		
+		.container {
+			width:65%;
+		}
+		
+		body {
+			background-image:url("images/loginBackground.jpg");
+			background-color:#ffffff;
+		}
+	</style>
+	<head>
+		<!-- Boostrap components -->
+        <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<h1>Start a new Session</h1>
+		<br>
+		<br>
+	</head>
+
+
+	<body>
+		<div class="jumbotron text-center">
+			<body align="center">
+				<div>
+					<form action='/newsession' method='post'>
+					<label for="name">Session Name: </label>
+					<input type="text" id="name" name="name" placeholder="Enter a username">
+					<br>
+					<br>
+					<label for="name">Class: </label>
+					<input type="text" id="pass" name="pass" placeholder="Enter a class">
+					<br><br>
+					<label for="name">Premium Price: </label>
+					<input type="number" id="pass" step=".05" name="pass" placeholder="Enter a price">
+					<br><br>
+					<input type="checkbox" name="terms" id="terms">
+					<a href="#">I accept the Terms and Conditions</a>
+					<br><br>
+					<input type="submit" class="button" value="Create Session"/>
+					</form>
+				</div>
+			</body>
+		</div>
+	</body>
+</html>

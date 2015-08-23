@@ -11,4 +11,39 @@
 		</nav>
 	</head>
 
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+	<script src="/socket.io/socket.io.js"></script>  
+
+	<script>	
+		// //on connection to server, ask for user's name 
+		// var socket = io.connect('http://localhost:5400');
+		// socket.on('connect', function(){
+		// 	//call the serverside function, add user and send the value of the prompt
+		// 	socket.emit('adduser', prompt("What's your name, friend?"));
+		// });
+
+		// socket.on('updatechat', function (username, data){
+		// 	//udate the chat body here
+		// })
+
+		// //listener, whenever server emits 'updaterooms', this updates the room the client is in
+		// socket.on('updaterooms', function(room, current_room){
+		// 	// $('#rooms').empty();
+		// 	// $.each(rooms, function(key, value) {
+		// 	// 	if(value == current_room){
+		// 	// 		$('#rooms').append('<div>' + value + '</div>');
+		// 	// 	}
+		// 	// 	else {
+		// 	// 		$('#rooms').append('<div><a href="#" onclick="switchRoom(\''+value+'\')">' + value + '</a></div>');
+		// 	// 	}
+		// 	// });
+		// })
+
+		// function switchRoom(room){
+		// 	socket.emit('switchRoom', room);
+		// }
+
+		
+	</script> 
+
 </html>
