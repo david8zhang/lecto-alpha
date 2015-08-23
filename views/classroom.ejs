@@ -1,4 +1,33 @@
 <html>
+	<style>
+
+
+		#remoteVideos {
+			opacity: 0;
+		}
+
+		li{
+			margin-top: 10px;
+		}
+
+		.body{
+			background-color:#B6C5D5;
+		}
+
+		#localvideo{
+			margin:5px;
+			border: 0 solid #333;
+			border-top: 15px solid #333;
+			border-bottom: 15px solid #333;
+			border-left: 15px solid #333;
+			border-right: 15px solid #333;
+		}
+
+		.navbar {
+			box-shadow: 0 5px 5px #333;
+		}
+
+	</style>
 	<head>
 		<!-- Boostrap components -->
         <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
@@ -11,21 +40,26 @@
 		<meta name="description" content="WebRTC codelab" />
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1">
 
+		<nav class="navbar navbar-default navbar-fixed-top">
+			<div class="container">
+				<a href="#" class="navbar-brand">Teach</a>
+				<ul class="nav nav-pills">
+					<li role="presentation"><a href="/classes"><b>Learn</b></a></li>
+				</ul>
+			</div>
+		</nav>	
 	</head>
 
-	<body>
-		<div id='videos'>
-			<video id='localVideo' autoplay></video>
-			<div id="remoteVideos"></div>
+	<body class="text-center body">
+		<br>
+		<br>
+		<br>
+		<div class="container">
+			<div id='videos'>
+				<video id='localVideo' autoplay></video>
+				<div id="remoteVideos"></div>
+			</div>	
 		</div>
-
-		<div>
-			<button id="startButton">Start</button>
-			<button id="callButton">Call</button>
-			<button id="hangupButton">Hang Up</button>
-		</div>
-		
-		<button id="sendButton" disabled>Send</button>
 
 	</body>
 
