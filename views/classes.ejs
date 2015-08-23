@@ -33,6 +33,7 @@
 	<head>
 		<!-- Boostrap components -->
         <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/animate.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>	
 
 		<nav class="navbar navbar-default navbar-fixed-top">
@@ -50,10 +51,10 @@
 		<br>
 		<br>
 		<div class="container">
-			<h1 class="text-center">Classes</h1>
+			<h1 class="animated fadeIn text-center">Classes</h1>
 			<div class="row">
 				<% classList.forEach(function(user){ %> 
-					<div class="col-md-2 text-center">
+					<div class="animated fadeInDown col-md-2 text-center">
 						<a href="/student"><%=user%></a>
 					</div>
 				<%	}); %>
