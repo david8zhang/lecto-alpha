@@ -21,6 +21,10 @@
 			background-color:#B6C5D5;
 		}
 
+		li{
+			margin-top: 10px;
+		}
+
 	</style>
 	<head>
 		<!-- Boostrap components -->
@@ -29,9 +33,16 @@
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		
 		<nav class="navbar navbar-default navbar-fixed-top">
+
 		  <div class="container">
-		   		<a href="#" class="navbar-brand"><%= username %></a>
+
+				<a href="#" class="navbar-brand">Teach</a>
+				<ul class="nav navbar-left">
+					<li role="presentation"><a href="/classes"><b>Learn</b></a></li>
+				</ul>
+
 		   		<a href="/logout" class="navbar-text navbar-right">Log Out</a>
+		  		<p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link"><%= username %></a></p>
 		   </div>
 		</nav>
 	</head>
@@ -65,7 +76,7 @@
 						<a href="#">I accept the Terms and Conditions</a>
 						<br>
 						<br>
-						<input type="submit" class="btn btn-primary btn-lg" value="Create Session"/>
+						<input type="submit" class="btn btn-primary" value="Create Session"/>
 					</form>
 				</div>
 			</body>
