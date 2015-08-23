@@ -105,13 +105,22 @@ app.get('/logout', function(req, res){
 app.get('/classes', function(req, res){
 	listSessions(function(sessions){
 		var list = []; 
+		var titleList = [];
+		var subjectList = [];
+		var price = [];
 		jsonString = JSON.parse(JSON.stringify(sessions))
 		for(i = 0; i < jsonString["Items"].length; i++){
 			list.push(jsonString["Items"][i].title + " " + jsonString["Items"][i].name)
+			titleList.push(jsonString["Items"][i].title);
+			subjectList.push(jsonString["Items"][i].subject);
+			price.push(jsonString["Items"][i].price);
 		}
 		console.log(list);
 		res.render('classes', {
-			classList: list
+			classList: list,
+			title: titleList,
+			subject: subjectList,
+			price: price
 		});
 
 	})
