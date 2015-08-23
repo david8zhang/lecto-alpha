@@ -1,3 +1,6 @@
+// idk what this does
+var path = require('path')
+
 //Initialize Express
 var express = require('express');
 var app = express();
@@ -81,6 +84,8 @@ function register(username, password){
 	})
 }
 
+//Load external assets for front-end
+app.use(express.static(__dirname, '/public'));
 
 //Use bower components(JQuery)
 app.use(express.static(__dirname + 'bower_components'));
