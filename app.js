@@ -4,10 +4,12 @@ var path = require('path')
 //Initialize Express
 var express = require('express');
 var app = express();
-var server = require('http').createServer(app);
+var ExpressPeerServer = require('peer').ExpressPeerServer;
+var server = require('http').createServer(app).listen(5400);
+console.log("server listening on 5400")
 
 //Initialize Socket.io
-var io = require('socket.io')(server);
+var io = require('socket.io')(server)
 
 //Other middleware needed to configure passport
 var bodyParser = require('body-parser');
@@ -25,13 +27,15 @@ var DOC = require('dynamodb-doc');
 AWS.config.update({region: 'us-west-2'});
 var docClient = new DOC.DynamoDB();
 var dynamodb = new AWS.DynamoDB();
-
-//test rooms hardcoded
-var rooms = ['room1', 'room2', 'room3'];
-var usernames = {};
+var options = {
+	debug: true
+}
 
 //Set the view engine
 app.set('view engine', 'ejs');
+
+app.use('/api', ExpressPeerServer(server, options));
+app.use('/peerjs', ExpressPeerServer(server, options));
 
 //Use the other middleware
 app.use(bodyParser.urlencoded({extended: false }));
@@ -44,6 +48,8 @@ app.use(expressSession({ secret: 'secret',
 //Register passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+
+
 
 /****************************PASSPORT AUTHENTICATION STRATEGY**************************/
 
@@ -95,7 +101,6 @@ app.get('/logout', function(req, res){
 	res.redirect('/')
 });
 
-
 //Get the classes page
 app.get('/classes', function(req, res){
 	res.render('classes');
@@ -121,6 +126,11 @@ app.get('/session', function(req, res){
 	});
 })
 
+//Get the sessions
+app.get('/classroom', function(req, res){
+	res.render('classroom')
+})
+
 //post registration information
 app.post('/register', function(req, res){
 	username = req.body.name;
@@ -137,64 +147,17 @@ app.post('/login', passport.authenticate('local'), function(req, res){
 
 //Post the new session information
 app.post('/newsession', function(req, res){
-	res.redirect('/')
+	var name = req.user.name;
+	var subject = req.body.subject;
+	var price = req.body.price;
+	var title = req.body.name;
+	newSession(name, title, subject, price);
+	res.redirect('/classroom')
 });
 
 
 /*********************************SOCKET IO*************************************/
-io.sockets.on('connection', function (socket){
-	// socket.on('adduser', function(username){
 
-	// 	//store the username in the socket session
-	// 	socket.username = username; 
-
-	// 	//Store this room in the socket session
-	// 	socket.room = 'room1';
-
-	// 	//store the client's username to the global list
-	// 	usernames[username] = username;
-
-	// 	//Send client to room 1
-	// 	socket.join('room1');
-
-	// 	//echo to the client that they've connected
-	// 	socket.emit('updatechat', 'SERVER', 'you have connected to room1');
-
-	// 	//echo to room 1 that a person has connected to their room
-	// 	socket.broadcast.to('room1').emit('updatechat', 'SERVER', username + ' has connected to this room');
-	// 	socket.emit('updaterooms', rooms, 'room1');
-
-	// })
-
-	// //Sending chats
-	// socket.on('sendchat', function (data){
-	// 	//we tell the client to execute 'updatechat' with 2 parameters
-	// 	io.sockets.in(socket.room).emit('updatechat', socket.username, data);
-	// });
-
-	// //switching to a new room
-	// socket.on('switchRoom', function(newroom)){
-	// 	socket.leave(socket.room);
-		
-	// 	//Join the new room specified by the client
-	// 	socket.join(newroom)
-
-	// 	//Send a message to the old room that the user has left
-	// 	socket.broadcast.to(socket.room).emit('updatechat', 'SERVER', socket.username + ' has left this room')
-	// 	socket.emit('updaterooms', rooms, newroom);
-	// }
-
-	// //When the user disconnects.. perform this
-	// socket.on('disconnect', function(){
-	// 	//remove the username from the global usernames list
-	// 	delete usernames[socket.username];
-	// 	//update list of users in chat
-	// 	io.sockets.emit('updateusers', usernames);
-	// 	//echo globally that this client has left
-	// 	socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
-	// 	socket.leave(socket.room)
-	// });
-});
 
 /*********************************FUNCTIONS**************************************/
 function register(username, password){
@@ -212,12 +175,47 @@ function register(username, password){
 	})
 }
 
+//Store the session in a database
+function newSession(name, title, subject, price){
+	var params = {};
+	params.TableName = 'teacher-sessions';
+
+	params.Item = {name: name, title: title, subject: subject, price: price};
+	docClient.putItem(params, function(err, data){
+		if(err){
+			console.log(err, err.stack)
+		} else {
+			console.log("Account successfully created!");
+		}
+	})
+
+}
+
+function getSession(username, callback){
+	var params = {};
+	params.TableName = 'teacher-sessions';
+	params.KeyConditions = [docClient.Condition('name', 'EQ', username)];
+	docClient.query(params, function(err, result){
+		if(err){
+			console.log(err, err.stack)
+		} else {
+			jsonString = JSON.parse(JSON.stringify(result))
+			var date = new Date().toUTCString();
+			var sessionid = jsonString["Items"].title + " " + date;
+			callback(sessionid);
+		
+		}
+	})
+
+}
+
 //Load external assets for front-end
 app.use(express.static(__dirname + '/public'));
 
-//Use bower components(JQuery)
-app.use(express.static(__dirname + 'bower_components'));
+//Load external js
+app.use(express.static(__dirname + '/js'));
 
-//Initialize the server
-console.log('server listening on port 5400');
-server.listen(5400);
+//Use bower components(JQuery)
+app.use(express.static(__dirname + '/bower_components'));
+
+app.use(express.static(__dirname + '/bower_components/peerjs'));
