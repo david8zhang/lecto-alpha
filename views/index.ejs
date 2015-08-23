@@ -4,30 +4,40 @@
 			margin-left: 25px;
 			margin-bottom: -10px;
 		}
+		
 		.big{
 			font-size: 50px;
+			color: #2c3e50;
+		}
+		
+		.body{
+			background-image:url('/images/loginBackground.jpg');
 		}
 	</style>
 	<head>
 		<!-- Boostrap components -->
         <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="/animate.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
 		<div class="page-header">
-		  <h1 class="big title-padding">Lecto</h1>
+		  <h1 class="big title-padding"><b>Lecto</b></h1>
 		</div>
 
 	</head>
 
 
-	<body>
+	<body class="body">
 		<div class="jumbotron text-center">
 			<!-- Make this Idea thing cycle through a list of ideas stored locally -->
-				<h1>#PlanarForm</h1>
-				<h3>Enlighten. Be Enlightened.</h3> 
-				<br>
-				<a class="btn btn-primary btn-lg" href="/login" role="button">Teach</a>
-				<a class="btn btn-primary btn-lg" href="/classes" role="button">Learn</a>
+				<div class="animated fadeIn">
+					<h1>#PlanarForm</h1>
+					<h3>Enlighten. Be Enlightened.</h3> 
+
+					<br>
+					<a class="btn btn-primary btn-lg" href="/login" role="button">Teach</a>
+					<a class="btn btn-primary btn-lg" href="/classes" role="button">Learn</a>
+				</div>
 		</div>
 	</body>
 </html>
