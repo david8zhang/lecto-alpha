@@ -103,7 +103,18 @@ app.get('/logout', function(req, res){
 
 //Get the classes page
 app.get('/classes', function(req, res){
-	res.render('classes');
+	listSessions(function(sessions){
+		var list = []; 
+		jsonString = JSON.parse(JSON.stringify(sessions))
+		for(i = 0; i < jsonString["Items"].length; i++){
+			list.push(jsonString["Items"][i].title + " " + jsonString["Items"][i].name)
+		}
+		console.log(list);
+		res.render('classes', {
+			classList: list
+		});
+
+	})
 });
 
 //get the registration page
@@ -128,7 +139,11 @@ app.get('/session', function(req, res){
 
 //Get the sessions
 app.get('/classroom', function(req, res){
-	res.render('classroom')
+	getSession(req.user.name, function(result){
+		res.render('classroom', {
+			sessionid: result
+		})
+	})
 })
 
 //post registration information
@@ -194,19 +209,29 @@ function newSession(name, title, subject, price){
 function getSession(username, callback){
 	var params = {};
 	params.TableName = 'teacher-sessions';
-	params.KeyConditions = [docClient.Condition('name', 'EQ', username)];
-	docClient.query(params, function(err, result){
+	params.Key = {name: username}
+	docClient.getItem(params, function(err, result){
 		if(err){
 			console.log(err, err.stack)
 		} else {
 			jsonString = JSON.parse(JSON.stringify(result))
-			var date = new Date().toUTCString();
-			var sessionid = jsonString["Items"].title + " " + date;
+			console.log(jsonString)
+			var sessionid = jsonString["Item"].title + " " + jsonString["Item"].name;
 			callback(sessionid);
-		
 		}
 	})
+}
 
+function listSessions(callback){
+	var params = {TableName: 'teacher-sessions'}
+	docClient.scan(params, function(err, data){
+		if(err){
+			console.log(err, err.stack)
+		} else {
+			console.log(data);
+			callback(data);
+		}
+	})
 }
 
 //Load external assets for front-end

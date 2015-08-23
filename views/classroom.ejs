@@ -1,7 +1,5 @@
 <html>
 	<style>
-
-
 		#remoteVideos {
 			opacity: 0;
 		}
@@ -27,6 +25,9 @@
 			box-shadow: 0 5px 5px #333;
 		}
 
+		.hidden{
+			visibility:hidden;
+		}
 	</style>
 	<head>
 		<!-- Boostrap components -->
@@ -72,10 +73,13 @@
 				</div>
 			</div>
 		</div>
+		<div class="hidden" id="keyholder"><%=sessionid%></div>
 
 	</body>
 
 	<script>
+		var sessID = document.getElementById("keyholder").innerHTML;
+		console.log(sessID);
 		var webrtc = new SimpleWebRTC({
 			localVideoEl: 'localVideo',
 			remoteVideosEl: 'remoteVideos',
@@ -83,7 +87,7 @@
 		});
 
 		webrtc.on('readyToCall', function () {
-			webrtc.joinRoom('My room name');
+			webrtc.joinRoom(sessID);
 		});
 	</script>
 
