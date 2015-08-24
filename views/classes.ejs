@@ -48,9 +48,6 @@
 	<body class="body">
 		<form class="hiddenform" id="someform" action="/student" method='post'>
 			<input type="text" id="sessionID" name="sessionID">
-			<input type="text" id="title" name="title">
-			<input type="text" id="subject" name="subject">
-			<input type="number" id="price" name="price">
 			<input type="submit">
 		</form>
 		<br>
@@ -61,7 +58,7 @@
 			<div class="row">
 				<% classList.forEach(function(user){ %> 
 					<div class="col-md-2 text-center">
-						<a href="/student"><%=user%></a>
+						<a href="#" onclick="clickHandler(event)"><%=user%></a>
 					</div>
 				<%	}); %>
 			</div>

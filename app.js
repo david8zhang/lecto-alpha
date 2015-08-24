@@ -105,22 +105,13 @@ app.get('/logout', function(req, res){
 app.get('/classes', function(req, res){
 	listSessions(function(sessions){
 		var list = []; 
-		var titleList = [];
-		var subjectList = [];
-		var price = [];
 		jsonString = JSON.parse(JSON.stringify(sessions))
 		for(i = 0; i < jsonString["Items"].length; i++){
 			list.push(jsonString["Items"][i].title + " " + jsonString["Items"][i].name)
-			titleList.push(jsonString["Items"][i].title);
-			subjectList.push(jsonString["Items"][i].subject);
-			price.push(jsonString["Items"][i].price);
 		}
 		console.log(list);
 		res.render('classes', {
-			classList: list,
-			title: titleList,
-			subject: subjectList,
-			price: price
+			classList: list
 		});
 
 	})
@@ -148,6 +139,8 @@ app.get('/session', function(req, res){
 
 app.get('/student', function(req, res){
 	var sessID = req.query.sid;
+	var username = sessID.substring(sessID.indexOf(" ") + 1);
+	console.log(username);
 	res.render('student', {
 		room: sessID
 	})
@@ -177,7 +170,7 @@ app.post('/register', function(req, res){
 app.post('/student', function(req, res){
 	var sid = encodeURIComponent(req.body.sessionID);
 	res.redirect('/student?sid=' + sid);
-});
+})
 
 //Post login information
 app.post('/login', passport.authenticate('local'), function(req, res){

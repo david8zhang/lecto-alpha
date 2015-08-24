@@ -28,11 +28,7 @@
 			box-shadow: 0 5px 5px #333;
 		}
 
-		.hidden{
-			visibility:hidden;
-		}
 	</style>
-
 	<head>
 		<!-- Boostrap components -->
         <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
@@ -65,6 +61,7 @@
 				<div id="remoteVideos"></div>
 			</div>	
 		</div>
+		
 
 		<div class="hidden" id="keyholder"><%=sessionid%></div>
 		<div class="container">
@@ -78,6 +75,7 @@
 				</div>
 			</div>
 		</div>
+
 	</body>
 
 	<script>
@@ -87,7 +85,9 @@
 			localVideoEl: 'localVideo',
 			autoRequestMedia: true
 		});
-		
+
+		webrtc.unmute();
+
 		webrtc.on('readyToCall', function () {
 			webrtc.joinRoom(sessID);
 		});
