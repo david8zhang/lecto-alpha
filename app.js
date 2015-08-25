@@ -140,10 +140,22 @@ app.get('/session', function(req, res){
 app.get('/student', function(req, res){
 	var sessID = req.query.sid;
 	var username = sessID.substring(sessID.indexOf(" ") + 1);
-	console.log(username);
-	res.render('student', {
-		room: sessID
+	checkSessionExists(username, function(result){
+		console.log("result is: " + result);
+		if(result == "found"){
+			getSession(username, function(result){
+				res.render('student', {
+					room: sessID,
+					subject: result[1],
+					price: result[2],
+					title: result[3]
+				})
+			})
+		} else {
+			res.redirect('/classes')
+		}
 	})
+	console.log(username);
 })
 
 //Get the sessions
@@ -177,6 +189,11 @@ app.post('/login', passport.authenticate('local'), function(req, res){
 	res.redirect('/dashboard')
 });
 
+app.post('/dashboard', function(req, res){
+	deleteSession(req.body.username)
+	res.redirect('/dashboard')
+})
+
 //Post the new session information
 app.post('/newsession', function(req, res){
 	var name = req.user.name;
@@ -184,7 +201,12 @@ app.post('/newsession', function(req, res){
 	var price = req.body.price;
 	var title = req.body.name;
 	newSession(name, title, subject, price);
-	res.redirect('/classroom')
+	
+	//Delay them so that they can't just spam sessions
+	var millisecondsToWait = 5000;
+	setTimeout(function(){
+		res.redirect('/classroom')
+	}, millisecondsToWait)
 });
 
 
@@ -211,13 +233,12 @@ function register(username, password){
 function newSession(name, title, subject, price){
 	var params = {};
 	params.TableName = 'teacher-sessions';
-
 	params.Item = {name: name, title: title, subject: subject, price: price};
 	docClient.putItem(params, function(err, data){
 		if(err){
 			console.log(err, err.stack)
 		} else {
-			console.log("Account successfully created!");
+			console.log("Session successfully created!");
 		}
 	})
 
@@ -249,6 +270,39 @@ function listSessions(callback){
 			callback(data);
 		}
 	})
+}
+
+function deleteSession(username){
+	var params = {};
+	params.TableName = 'teacher-sessions';
+	params.Key = {name: username}
+	docClient.deleteItem(params, function(err, result){
+		if(err){
+			console.log(err, err.stack)
+		} else {
+			console.log("Session deleted!");
+			console.log(result);
+		}
+	})
+}
+
+function checkSessionExists(username, callback){
+	var params = {};
+	params.TableName = "teacher-sessions";
+	params.KeyConditions = [docClient.Condition('name', 'EQ', username)];
+	docClient.query(params, function(err, result){
+		if(err){
+			console.log(err, err.stack)
+		} else {
+			jsonString = JSON.parse(JSON.stringify(result))
+			if(jsonString["Count"] == 0){
+				callback("none")
+			} else {
+				callback("found")
+			}
+		}
+	})
+
 }
 
 //Load external assets for front-end

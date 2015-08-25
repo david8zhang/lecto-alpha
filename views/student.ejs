@@ -10,7 +10,6 @@
 			border-bottom: 15px solid #333;
 			border-left: 15px solid #333;
 			border-right: 15px solid #333;
-			visibility:hidden;
 		}
 
 		li{
@@ -47,6 +46,7 @@
 				<a href="/login" class="navbar-brand">Teach</a>
 				<ul class="nav nav-pills">
 					<li role="presentation"><a href="/"><b>Leave Session</b></a></li>
+					<li role="presentation"><a href="#" onclick="turnOnVideo()"><b>Turn On Video</b></a></li>
 				</ul>
 			</div>
 		</nav>	
@@ -59,7 +59,7 @@
 		<div class="container">
 			<div id='videos'>
 				<video id='localVideo' autoplay></video>
-				<div id="remoteVideos"></div>
+				<div class="hidden" id="remoteVideos"></div>
 			</div>	
 		</div>
 		
@@ -68,11 +68,11 @@
 		<div class="container">
 			<div class="panel panel-default">
 				<div class="panel-heading">
-					<h1>Enter Title</h1>
-					<h3>Enter Subject</h3>
+					<h1><%=title%></h1>
+					<h3><%=subject%></h3>
 				</div>
 				<div class="panel-body">
-					<p>The price for video/premium on this lecture is $</p>
+					<p>The price for video/premium on this lecture is $<%=price%></p>
 				</div>
 			</div>
 		</div>
@@ -85,12 +85,17 @@
 		var webrtc = new SimpleWebRTC({
 			remoteVideosEl: 'remoteVideos',
 			autoRequestMedia: true,
-			media: {video: false, audio: true}
+			media: {video: true, audio: true}
 		});
 
 		webrtc.on('readyToCall', function () {
 			webrtc.joinRoom(sessID);
 		});
+
+		function turnOnVideo(){
+			var remote_vid = document.getElementById("remoteVideos");
+			remote_vid.className = "remoteVideos";
+		}
 	</script>
 
 </html>
