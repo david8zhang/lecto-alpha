@@ -46,7 +46,9 @@
 				<a href="/login" class="navbar-brand">Teach</a>
 				<ul class="nav nav-pills">
 					<li role="presentation"><a href="/"><b>Leave Session</b></a></li>
-					<li role="presentation"><a href="#" onclick="turnOnVideo()"><b>Turn On Video</b></a></li>
+					<li class="hidden" role="presentation"><a href="#" onclick="turnOnVideo()"><b>Turn On Video</b></a></li>
+					<li role="presentation"><a href="#" onclick="turnOnVideo()"><b>Go Premium</b></a></li>
+
 				</ul>
 			</div>
 		</nav>	
@@ -91,6 +93,7 @@
 		webrtc.on('readyToCall', function () {
 			webrtc.joinRoom(sessID);
 		});
+
 
 		function turnOnVideo(){
 			var remote_vid = document.getElementById("remoteVideos");
