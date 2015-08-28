@@ -89,8 +89,6 @@
 			autoRequestMedia: true
 		});
 
-		webrtc.unmute();
-
 		webrtc.on('readyToCall', function () {
 			webrtc.joinRoom(sessID);
 		});
