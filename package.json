@@ -1,11 +1,32 @@
 {
   "name": "lecto",
   "version": "1.0.0",
-  "engines": {
+  "engine": {
 	"node": "0.12.4"
-  }
-  "description": "Academic Twitch",
-  "main": "index.js",
+  },
+  "description": "Online platform for people hold 'guerilla style' review sessions. Name subject to change",
+  "main": "app.js",
+  "dependencies": {
+    "body-parser": "^1.13.3",
+    "aws-sdk": "^2.1.46",
+    "bower": "^1.4.1",
+    "cookie-parser": "^1.3.5",
+    "dynamodb-doc": "^1.0.0",
+    "debug": "^2.2.0",
+    "ejs": "^2.3.3",
+    "express": "^4.13.3",
+    "fs": "^0.0.2",
+    "express-session": "^1.11.3",
+    "morgan": "^1.6.1",
+    "node-static": "^0.7.7",
+    "passport-local": "^1.0.0",
+    "passport": "^0.3.0",
+    "peer": "^0.2.8",
+    "socket.io": "^1.3.6",
+    "serve-favicon": "^2.3.0",
+    "ws": "^0.8.0"
+  },
+  "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,31 +34,10 @@
     "type": "git",
     "url": "git+https://github.com/david8zhang/lecto.git"
   },
-  "author": "David Zhang",
+  "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/david8zhang/lecto/issues"
   },
-  "homepage": "https://github.com/david8zhang/lecto#readme",
-  "dependencies": {
-    "body-parser": "^1.13.3",
-    "bower": "^1.4.1",
-    "cookie-parser": "^1.3.5",
-    "aws-sdk": "^2.1.46",
-    "debug": "^2.2.0",
-    "ejs": "^2.3.3",
-    "dynamodb-doc": "^1.0.0",
-    "express": "^4.13.3",
-    "express-session": "^1.11.3",
-    "morgan": "^1.6.1",
-    "fs": "^0.0.2",
-    "node-static": "^0.7.7",
-    "passport": "^0.3.0",
-    "passport-local": "^1.0.0",
-    "peer": "^0.2.8",
-    "serve-favicon": "^2.3.0",
-    "ws": "^0.8.0",
-    "socket.io": "^1.3.6"
-  },
-  "devDependencies": {}
+  "homepage": "https://github.com/david8zhang/lecto#readme"
 }
