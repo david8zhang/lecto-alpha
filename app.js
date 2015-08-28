@@ -25,6 +25,8 @@ var AWS = require('aws-sdk');
 var s3 = new AWS.S3();
 var DOC = require('dynamodb-doc');
 AWS.config.update({region: 'us-west-2'});
+var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
+var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
 var docClient = new DOC.DynamoDB();
 var dynamodb = new AWS.DynamoDB();
 var options = {
@@ -55,6 +57,7 @@ app.use(passport.session());
 
 //Define passport authentication strategy here
 passport.use(new passportLocal.Strategy(function(username, password, done){
+	AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 	var queryParams = {};
 	queryParams.TableName = 'lecto-teachers';
 	queryParams.KeyConditions = [docClient.Condition('username', 'EQ', username)];
@@ -215,6 +218,7 @@ app.post('/newsession', function(req, res){
 
 /*********************************FUNCTIONS**************************************/
 function register(username, password){
+	AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 	var params = {};
 	params.TableName = 'lecto-teachers';
 
@@ -231,6 +235,7 @@ function register(username, password){
 
 //Store the session in a database
 function newSession(name, title, subject, price){
+	AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 	var params = {};
 	params.TableName = 'teacher-sessions';
 	params.Item = {name: name, title: title, subject: subject, price: price};
@@ -245,6 +250,7 @@ function newSession(name, title, subject, price){
 }
 
 function getSession(username, callback){
+	AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 	var params = {};
 	params.TableName = 'teacher-sessions';
 	params.Key = {name: username}
@@ -261,6 +267,7 @@ function getSession(username, callback){
 }
 
 function listSessions(callback){
+	AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 	var params = {TableName: 'teacher-sessions'}
 	docClient.scan(params, function(err, data){
 		if(err){
@@ -273,6 +280,7 @@ function listSessions(callback){
 }
 
 function deleteSession(username){
+	AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 	var params = {};
 	params.TableName = 'teacher-sessions';
 	params.Key = {name: username}
@@ -287,6 +295,7 @@ function deleteSession(username){
 }
 
 function checkSessionExists(username, callback){
+	AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 	var params = {};
 	params.TableName = "teacher-sessions";
 	params.KeyConditions = [docClient.Condition('name', 'EQ', username)];
