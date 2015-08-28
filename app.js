@@ -315,3 +315,5 @@ app.use(express.static(__dirname + '/js'));
 app.use(express.static(__dirname + '/bower_components'));
 
 app.use(express.static(__dirname + '/bower_components/peerjs'));
+
+module.exports = app;
