@@ -26,7 +26,7 @@ var s3 = new AWS.S3();
 var DOC = require('dynamodb-doc');
 AWS.config.update({region: 'us-west-2'});
 var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY;
-var AWS_SECRET_KEY = process.env.AWS_SECRET_KEY;
+var AWS_SECRET_KEY = process.env.AWS_SECRET_ACCESS_KEY;
 var docClient = new DOC.DynamoDB();
 var dynamodb = new AWS.DynamoDB();
 var options = {
