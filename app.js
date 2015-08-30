@@ -4,7 +4,7 @@ var path = require('path')
 //Initialize Express
 var express = require('express');
 var app = express();
-var ExpressPeerServer = require('peer').ExpressPeerServer;
+// var ExpressPeerServer = require('peer').ExpressPeerServer;
 var server = require('http').createServer(app).listen(5400);
 console.log("server listening on 5400")
 
@@ -20,28 +20,30 @@ var expressSession = require('express-session');
 var passport = require('passport');
 var passportLocal = require('passport-local')
 
+//Email authentication for signup
+var nodemailer = require('nodemailer');
+var smtpTransport = require('nodemailer-smtp-transport');
+
 //AWS packages use with DynamoDB
 var AWS = require('aws-sdk');
 var s3 = new AWS.S3();
 var DOC = require('dynamodb-doc');
+
+//AWS configuration
 AWS.config.update({region: 'us-west-2'});
 var AWS_ACCESS_KEY = process.env.AWS_ACCESS_KEY_ID;
 var AWS_SECRET_KEY = process.env.AWS_SECRET_ACCESS_KEY;
-
-console.log(AWS_ACCESS_KEY);
-console.log(AWS_SECRET_KEY);
-
 var docClient = new DOC.DynamoDB();
 var dynamodb = new AWS.DynamoDB();
 var options = {
 	debug: true
 }
 
+//Used for generating token during password reset
+var crypto = require('crypto');
+
 //Set the view engine
 app.set('view engine', 'ejs');
-
-app.use('/api', ExpressPeerServer(server, options));
-app.use('/peerjs', ExpressPeerServer(server, options));
 
 //Use the other middleware
 app.use(bodyParser.urlencoded({extended: false }));
@@ -55,10 +57,7 @@ app.use(expressSession({ secret: 'secret',
 app.use(passport.initialize());
 app.use(passport.session());
 
-
-
 /****************************PASSPORT AUTHENTICATION STRATEGY**************************/
-
 //Define passport authentication strategy here
 passport.use(new passportLocal.Strategy(function(username, password, done){
 	AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
@@ -72,10 +71,18 @@ passport.use(new passportLocal.Strategy(function(username, password, done){
 			console.log(err, err.stack)
 		} else {
 			jsonString = JSON.parse(JSON.stringify(result))
+			console.log(jsonString);
 			if(jsonString["Count"] == 0){
 				done(null, null)
 			} else {
-				done(null, {id: username, name: jsonString["Items"].username});
+				console.log(jsonString["Items"][0].token)
+				//There should be an expiration check as well, but that will come later
+				if(jsonString["Items"][0].token == "null"){
+					done(null, null)
+				} else {
+					//Checks if there is an authentication token (to indicate that the user has authenticated)
+					done(null, {id: username, name: jsonString["Items"].username});
+				}
 			}
 		}
 	})
@@ -120,7 +127,6 @@ app.get('/classes', function(req, res){
 		res.render('classes', {
 			classList: list
 		});
-
 	})
 });
 
@@ -163,7 +169,7 @@ app.get('/student', function(req, res){
 		}
 	})
 	console.log(username);
-})
+});
 
 //Get the sessions
 app.get('/classroom', function(req, res){
@@ -177,12 +183,52 @@ app.get('/classroom', function(req, res){
 	})
 })
 
+//User authentication screen
+app.get('/activate/:token', function(req, res){
+	authToken = req.params.token.split('&')[0].toString();
+	username = req.params.token.split('&')[1].toString();
+	activate(username, authToken);
+	res.redirect('/login');
+})
+
 //post registration information
 app.post('/register', function(req, res){
 	username = req.body.name;
 	password = req.body.pass;
+	email = req.body.email;
 
-	register(username, password)
+	generateAuthToken(function(err, token){
+		//Create an smtp transport
+		var transporter = nodemailer.createTransport(smtpTransport({
+			service: 'gmail',
+			auth: {
+				user: 'lecto.info@gmail.com',
+				pass: 'da51d2eda2'
+			}
+		}));
+
+		//Send out the mail for account activation
+		var mailOptions = {
+			from: 'lecto.info@gmail.com',
+			to: email,
+			subject: 'Activate your account',
+			text: 'Please click on the link below to activate your account: \n\n' + 
+			'http://' + req.headers.host + '/activate/' + token + '&' + username + '\n\n' + 
+			'If you did not create an account, please ignore this email' 
+		};
+
+		transporter.sendMail(mailOptions, function(error, info){
+			if(error){
+				console.log(error)
+			} else {
+				console.log("Message Sent: " +  info.response);
+					//Registering user
+				register(username, password, email)
+			}
+		})
+
+	})
+
 	res.redirect('/')
 });
 
@@ -221,13 +267,14 @@ app.post('/newsession', function(req, res){
 
 
 /*********************************FUNCTIONS**************************************/
-function register(username, password){
+//Creates the user account
+function register(username, password, email){
 	AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 	var params = {};
 	params.TableName = 'lecto-teachers';
 
 	//Add more parameters later (comments, reviews)
-	params.Item = {username: username, password: password};
+	params.Item = {username: username, password: password, email: email, token: "null"};
 	docClient.putItem(params, function(err, data){
 		if(err){
 			console.log(err, err.stack)
@@ -253,6 +300,7 @@ function newSession(name, title, subject, price){
 
 }
 
+//Retrieves session information
 function getSession(username, callback){
 	AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 	var params = {};
@@ -270,6 +318,7 @@ function getSession(username, callback){
 	})
 }
 
+//list sessions so that users can see them on the 'classes' page
 function listSessions(callback){
 	AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 	var params = {TableName: 'teacher-sessions'}
@@ -283,6 +332,7 @@ function listSessions(callback){
 	})
 }
 
+//delete a specific class session
 function deleteSession(username){
 	AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 	var params = {};
@@ -298,6 +348,8 @@ function deleteSession(username){
 	})
 }
 
+
+//Check if a specific class session exists
 function checkSessionExists(username, callback){
 	AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 	var params = {};
@@ -315,7 +367,34 @@ function checkSessionExists(username, callback){
 			}
 		}
 	})
+}
 
+
+//Generate the authentication token for account activation
+function generateAuthToken(done){
+	crypto.randomBytes(20, function(err, buf){
+		var token = buf.toString('hex');
+		done(err, token);
+	})
+}
+
+function activate(user, token){
+	var params = {};
+	params.TableName = 'lecto-teachers';
+	params.Key = {username: user}
+
+	//update the authentication token to signify that the user has activated their account
+	params.UpdateExpression = "set #token = :token";
+	params.ExpressionAttributeNames = {"#token": "token"};
+	params.ExpressionAttributeValues = {":token": token};
+
+	docClient.updateItem(params, function(err, data){
+		if(err){
+			console.log(err, err.stack)
+		} else {
+			console.log("Account activated!")
+		}
+	})
 }
 
 //Load external assets for front-end

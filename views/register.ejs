@@ -13,7 +13,10 @@
 		li{
 			margin-top: 10px;
 		}
-
+		.align{
+			margin-left: 28px;
+		}
+		
 	</style>
 	<head>
 		<!-- Boostrap components -->
@@ -47,6 +50,10 @@
 				<div class="panel-body">
 					<br>
 					<form action='/register' method='post'>
+						<label class="align"  for="name">Email: </label>
+						<input type="text" id="email" name="email" placeholder="Enter an email" required>
+						<br>
+						<br>
 						<label for="name">Username: </label>
 						<input type="text" id="name" name="name" placeholder="Enter a username" required>
 						<br>
