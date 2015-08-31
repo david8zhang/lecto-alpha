@@ -3,6 +3,7 @@ var path = require('path')
 
 //Initialize Express
 var express = require('express');
+var flash = require('connect-flash');
 var app = express();
 // var ExpressPeerServer = require('peer').ExpressPeerServer;
 var server = require('http').createServer(app).listen(5400);
@@ -56,6 +57,7 @@ app.use(expressSession({ secret: 'secret',
 //Register passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
+app.use(flash());
 
 /****************************PASSPORT AUTHENTICATION STRATEGY**************************/
 //Define passport authentication strategy here
@@ -73,12 +75,12 @@ passport.use(new passportLocal.Strategy(function(username, password, done){
 			jsonString = JSON.parse(JSON.stringify(result))
 			console.log(jsonString);
 			if(jsonString["Count"] == 0){
-				done(null, null)
+				done(null, false, {message: 'Incorrect username or password'})
 			} else {
 				console.log(jsonString["Items"][0].token)
-				//There should be an expiration check as well, but that will come later
+				//Check if the user has activated through their email
 				if(jsonString["Items"][0].token == "null"){
-					done(null, null)
+					done(null, false, {message: 'Account not activated. Please check your email'})
 				} else {
 					//Checks if there is an authentication token (to indicate that the user has authenticated)
 					done(null, {id: username, name: jsonString["Items"].username});
@@ -106,7 +108,7 @@ app.get('/', function(req, res){
 
 //Get the login page
 app.get('/login', function(req, res){
-	res.render('login');
+	res.render('login', {message: req.flash('error')});
 });
 
 //Get the logout page
@@ -221,7 +223,6 @@ app.post('/register', function(req, res){
 			if(error){
 				console.log(error)
 			} else {
-				console.log("Message Sent: " +  info.response);
 					//Registering user
 				register(username, password, email)
 			}
@@ -237,10 +238,8 @@ app.post('/student', function(req, res){
 	res.redirect('/student?sid=' + sid);
 })
 
-//Post login information
-app.post('/login', passport.authenticate('local'), function(req, res){
-	res.redirect('/dashboard')
-});
+//Post login information - redirect accordingly and show the respective messages 
+app.post('/login', passport.authenticate('local', {successRedirect:'/dashboard', failureRedirect:'/login', failureFlash: true}));
 
 app.post('/dashboard', function(req, res){
 	deleteSession(req.body.username)

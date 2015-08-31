@@ -18,6 +18,15 @@
 		.navbar {
 			box-shadow: 0 5px 5px #333;
 		}
+		.error-handle {
+			color: #DB2929;
+			text-align: center;
+			border-radius: 5px;
+			background-color:#FFCCCC;
+		}
+		.invisible{
+			visibility: hidden;
+		}
 		
 	</style>
 	<head>
@@ -43,11 +52,15 @@
 		<br>
 		<br>
 		<div class="container">	
+			<% if (message) { %>
+			 	<p class="error-handle"><%= message %></p>
+			<% } else { %>
+				<p class="invisible"></p>
+			<% } %>
 			<div class="panel panel-default">
 				<div class="panel-heading animated fadeIn">
 					<h1>Login</h1>
 				</div>
-				
 				<div class="panel-body">
 					<br>
 					<form action='/login' method='post'>
