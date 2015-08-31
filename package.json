@@ -2,7 +2,7 @@
   "name": "lecto",
   "version": "1.0.0",
   "engine": {
-	"node": "0.12.4"
+    "node": "0.12.4"
   },
   "description": "Online platform for people hold 'guerilla style' review sessions. Name subject to change",
   "main": "app.js",
@@ -29,7 +29,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-	"start": "node ./bin/www"
+    "start": "node ./bin/www"
   },
   "repository": {
     "type": "git",
