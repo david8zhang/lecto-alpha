@@ -61,7 +61,6 @@
 		<div class="container">
 			<div id='videos'>
 				<video id='localVideo' autoplay></video>
-				<div id="remoteVideos"></div>
 			</div>	
 		</div>
 		
@@ -83,7 +82,7 @@
 
 	<script>
 		var sessID = document.getElementById("keyholder").innerHTML;
-		console.log(sessID);
+		console.log("SessionID = " + sessID);
 		var webrtc = new SimpleWebRTC({
 			localVideoEl: 'localVideo',
 			autoRequestMedia: true

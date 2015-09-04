@@ -3,7 +3,7 @@
 		.hidden{
 			visibility:hidden;
 		}
-		.remoteVideos {
+		.remoteStyle {
 			margin:5px;
 			border: 0 solid #333;
 			border-top: 15px solid #333;
@@ -85,34 +85,35 @@
 		var sessID = document.getElementById("keyholder").innerHTML;
 		console.log(sessID);
 		var webrtc = new SimpleWebRTC({
-			remoteVideosEl: '',
-			autoRequestMedia: true,
-			media: {video: true, audio: true}
+			remoteVideosEl: 'remoteVideos',
+			autoRequestMedia: true
 		});
 
 		webrtc.on('readyToCall', function () {
 			webrtc.joinRoom(sessID);
 		});
 
-		//Video added element for adding style to each individual remote video element
-		webrtc.on('videoAdded', function(video, peer){
-			console.log('video added', peer);
-			var remotes = document.getElementById('remoteVideos');
-			if(remotes){
-				var container = document.createElement('div');
-				container.className = 'remoteVideos';
-				container.id = 'container_' + webrtc.getDomId(peer);
-				container.appendChild(video);
+		// local p2p/ice failure
+		webrtc.on('iceFailed', function (peer) {
+		    console.log('local fail', connstate);
+		    if (connstate) {
+		        connstate.innerText = 'Connection failed.';
+		        fileinput.disabled = 'disabled';
+		    }
+		});
 
-				//Supprss contextmenu
-				video.oncontextmenu = function(){return false;}
-				remotes.appendChild(container);
-			}
-		})
+		// remote p2p/ice failure
+		webrtc.on('connectivityError', function (peer) {
+		    console.log('remote fail', connstate);
+		    if (connstate) {
+		        connstate.innerText = 'Connection failed.';
+		        fileinput.disabled = 'disabled';
+		    }
+		});
 
 		function turnOnVideo(){
 			var remote_vid = document.getElementById("remoteVideos");
-			remote_vid.className = "remoteVideos";
+			remote_vid.className = "remoteStyle";
 		}
 	</script>
 
