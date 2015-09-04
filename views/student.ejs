@@ -93,22 +93,17 @@
 			webrtc.joinRoom(sessID);
 		});
 
-		// local p2p/ice failure
 		webrtc.on('iceFailed', function (peer) {
-		    console.log('local fail', connstate);
-		    if (connstate) {
-		        connstate.innerText = 'Connection failed.';
-		        fileinput.disabled = 'disabled';
-		    }
+		    var pc = peer.pc;
+		    console.log('had local relay candidate', pc.hadLocalRelayCandidate);
+		    console.log('had remote relay candidate', pc.hadRemoteRelayCandidate);
 		});
 
 		// remote p2p/ice failure
 		webrtc.on('connectivityError', function (peer) {
-		    console.log('remote fail', connstate);
-		    if (connstate) {
-		        connstate.innerText = 'Connection failed.';
-		        fileinput.disabled = 'disabled';
-		    }
+		    var pc = peer.pc;
+		    console.log('had local relay candidate', pc.hadLocalRelayCandidate);
+		    console.log('had remote relay candidate', pc.hadRemoteRelayCandidate);
 		});
 
 		function turnOnVideo(){
