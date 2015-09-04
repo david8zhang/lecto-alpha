@@ -227,7 +227,6 @@ app.post('/register', function(req, res){
 				register(username, password, email)
 			}
 		})
-
 	})
 
 	res.redirect('/')

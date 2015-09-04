@@ -3,7 +3,7 @@
 		.hidden{
 			visibility:hidden;
 		}
-		#remoteVideos {
+		.remoteVideos {
 			margin:5px;
 			border: 0 solid #333;
 			border-top: 15px solid #333;
@@ -85,7 +85,7 @@
 		var sessID = document.getElementById("keyholder").innerHTML;
 		console.log(sessID);
 		var webrtc = new SimpleWebRTC({
-			remoteVideosEl: 'remoteVideos',
+			remoteVideosEl: '',
 			autoRequestMedia: true,
 			media: {video: true, audio: true}
 		});
@@ -93,6 +93,22 @@
 		webrtc.on('readyToCall', function () {
 			webrtc.joinRoom(sessID);
 		});
+
+		//Video added element for adding style to each individual remote video element
+		webrtc.on('videoAdded', function(video, peer){
+			console.log('video added', peer);
+			var remotes = document.getElementById('remoteVideos');
+			if(remotes){
+				var container = document.createElement('div');
+				container.className = 'remoteVideos';
+				container.id = 'container_' + webrtc.getDomId(peer);
+				container.appendChild(video);
+
+				//Supprss contextmenu
+				video.oncontextmenu = function(){return false;}
+				remotes.appendChild(container);
+			}
+		})
 
 		function turnOnVideo(){
 			var remote_vid = document.getElementById("remoteVideos");
