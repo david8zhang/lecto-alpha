@@ -92,20 +92,7 @@
 		webrtc.on('readyToCall', function () {
 			webrtc.joinRoom(sessID);
 		});
-
-		webrtc.on('iceFailed', function (peer) {
-		    var pc = peer.pc;
-		    console.log('had local relay candidate', pc.hadLocalRelayCandidate);
-		    console.log('had remote relay candidate', pc.hadRemoteRelayCandidate);
-		});
-
-		// remote p2p/ice failure
-		webrtc.on('connectivityError', function (peer) {
-		    var pc = peer.pc;
-		    console.log('had local relay candidate', pc.hadLocalRelayCandidate);
-		    console.log('had remote relay candidate', pc.hadRemoteRelayCandidate);
-		});
-
+		
 		function turnOnVideo(){
 			var remote_vid = document.getElementById("remoteVideos");
 			remote_vid.className = "remoteStyle";
