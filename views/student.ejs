@@ -92,10 +92,23 @@
 		webrtc.on('readyToCall', function () {
 			webrtc.joinRoom(sessID);
 		});
-		
+
 		function turnOnVideo(){
 			var remote_vid = document.getElementById("remoteVideos");
 			remote_vid.className = "remoteStyle";
+
+			//Get all the remote video elements and make all but the first one hidden
+			var list = document.getElmeentsByTagName("VIDEO");
+			if(list.length > 0){
+				for(var i = 0; i < list.length; i++){
+					if(i > 1){
+						list[i].className = "hidden";
+					}
+				}
+			} else {
+				alert("could not get remote video. Try refreshing");
+			}
+
 		}
 	</script>
 
