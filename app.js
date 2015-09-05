@@ -193,6 +193,10 @@ app.get('/activate/:token', function(req, res){
 	res.redirect('/login');
 })
 
+app.get('/success', function(req, res){
+	res.render('success');
+})
+
 //post registration information
 app.post('/register', function(req, res){
 	username = req.body.name;
@@ -229,7 +233,7 @@ app.post('/register', function(req, res){
 		})
 	})
 
-	res.redirect('/')
+	res.redirect('/success')
 });
 
 app.post('/student', function(req, res){
