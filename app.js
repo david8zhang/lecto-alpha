@@ -66,9 +66,10 @@ passport.use(new passportLocal.Strategy(function(username, password, done){
 	var queryParams = {};
 	queryParams.TableName = 'lecto-teachers';
 	queryParams.KeyConditions = [docClient.Condition('username', 'EQ', username)];
-	queryParams.QueryFilter = docClient.Condition('password', 'EQ', password);
-	docClient.query(queryParams, function(err, result){
-		if(err){
+
+	queryParams.QueryFilter = docClient.Condition('password', 'EQ', bcrypt.hashSync(password));//If docClient.Condition checks for equality this
+	docClient.query(queryParams, function(err, result){                                        //Otherwise we can use bcrypt.compareSync(__), which
+		if(err){                                                                               //returns a boolean value based on equality
 			done(new Error('Oh Shit!'));
 			console.log(err, err.stack)
 		} else {
@@ -275,8 +276,17 @@ function register(username, password, email){
 	var params = {};
 	params.TableName = 'lecto-teachers';
 
+	//npm install bcrypt in order for this to work
+
+	//Obtains secure random numbers
+	var bcrypt = require('bcryptjs');
+
+	var salt = bcrypt.genSaltSync(10);
+	var hash = bcrypt.hashSync(password, salt);
+
 	//Add more parameters later (comments, reviews)
-	params.Item = {username: username, password: password, email: email, token: "null"};
+	//replaced password with hash (because we never store the password, just the hash of the password)
+	params.Item = {username: username, password: hash, email: email, token: "null"};
 	docClient.putItem(params, function(err, data){
 		if(err){
 			console.log(err, err.stack)
