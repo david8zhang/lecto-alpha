@@ -263,6 +263,11 @@ app.post('/dashboard', function(req, res){
 	res.redirect('/dashboard')
 })
 
+app.post('/goodupload', function(req, res){
+	res.render('goodupload')
+});
+
+
 //Post the new session information
 app.post('/newsession', function(req, res){
 	var name = req.user.name;

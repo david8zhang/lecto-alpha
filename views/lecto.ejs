@@ -44,6 +44,9 @@
 		.navbar {
 			box-shadow: 0 5px 5px #333;
 		}
+		.viisble{
+			visibility: visible;
+		}
 
 		</style>
 	<head>
@@ -82,33 +85,35 @@
 			<body align="center">
 				<div>
 					<!-- Replace the 'newsession' with s3 bucket name -->
-						<label for="name">Name: </label>
-						<br>
-						<input type="text" id="name" name="name" placeholder="Enter a username">
-						<br>
-						<br>
-						<label for="name">Class: </label>
-						<br>
-						<input type="text" id="class" name="subject" placeholder="Enter a class">
-						<br>
-						<br>
-						<label for="school">School: </label> 
-						<br>
-						<select id="school" class="box" name ="schools" maxlength="194"> 
-							<option value="Select">Select a School</option>
-							<option value="UC Berkeley">UC Berkeley</option>
-						</select> 
-						<br>
-						<br>
-						<input id="uploadBtn" type="file" name="file" />
-						<br>
-						<input type="checkbox" name="terms" id="terms">
-						<a href="#">I accept the Terms and Conditions</a>
-						<br>
-						<br>
- 						<input id="submit-button" type="submit" class="btn btn-primary" value="Upload"/>
-
+					<label for="name">Name: </label>
+					<br>
+					<input type="text" id="name" name="name" placeholder="Enter a username">
+					<br>
+					<br>
+					<label for="name">Class: </label>
+					<br>
+					<input type="text" id="class" name="subject" placeholder="Enter a class">
+					<br>
+					<br>
+					<label for="school">School: </label> 
+					<br>
+					<select id="school" class="box" name ="schools" maxlength="194"> 
+						<option value="Select">Select a School</option>
+						<option value="UC Berkeley">UC Berkeley</option>
+					</select> 
+					<br>
+					<br>
+					<input id="uploadBtn" type="file" name="file" />
+					<br>
+					<input type="checkbox" name="terms" id="terms">
+					<a href="#">I accept the Terms and Conditions</a>
+					<br>
+					<br>
+					<input id="submit-button" type="submit" class="btn btn-primary" value="Upload"/>
 				</div>
+
+				<form id="progform" action="/goodupload" method="post">
+				</form>
 
 				<progress id="fileProgress" max="100" class="hidden">
 				</progress>
@@ -139,9 +144,7 @@
 					var fileChooser = document.getElementById('uploadBtn');
 					var button = document.getElementById('submit-button');
 					button.addEventListener('click', function(){
-
 						var username = $("#keyholder").html();
-
 						var lect_name = $("#name").val();
 						var lect_class = $("#class").val();
 						var lect_school = $("#school").val();
@@ -151,7 +154,7 @@
 						console.log(lect_school);
 						console.log(username);
 
-						var filename = username + " " + lect_name + " " + lect_class + " " + lect_school; 
+						var filename = username + "&" + lect_name + "&" + lect_class + "&" + lect_school; 
  
 						var file = fileChooser.files[0];
 						if(file){
@@ -164,14 +167,17 @@
 									console.log(data);
 								}
 							})
-
 							//Console currently logs the progresss of the file upload, turn this into a progress bar later on
 							request.on('httpUploadProgress', function(progress){
 								var percent = (progress.loaded/progress.total) * 100; 
 								var progDiv = document.getElementById("fileProgress");
-								var progDiv.className = 
+								progDiv.className = "visible";
 								progDiv.value = percent; 
 								console.log(progress.loaded + " of " + progress.total + " bytes");
+								if(percent == 100){
+									var form = document.getElementById("progform")
+									form.submit();
+								}				
 							})
 						} else {
 							console.log('nothing to upload');
