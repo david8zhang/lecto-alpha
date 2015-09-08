@@ -1,0 +1,185 @@
+<html>
+	<style>
+		.title-padding{
+			margin-left: 25px;
+			margin-bottom: -10px;
+		}
+		.big{
+			font-size: 50px;
+		}
+
+		input{
+		    padding: 10px;
+			border: solid 1px #eeeeee;
+		}
+
+		.box{
+			padding:10px;
+			border: solid 1px #eeeeee;
+			text-align: center;
+		}
+		
+		.container {
+			width:65%;
+		}
+		select{
+			width: 194px;
+		}
+
+		.body {
+			background-color:#B6C5D5;
+		}
+		.center{
+			text-align:center;
+		}
+
+		li{
+			margin-top: 10px;
+		}
+
+		.hidden{
+			visibility: hidden;
+		}
+
+		.navbar {
+			box-shadow: 0 5px 5px #333;
+		}
+
+		</style>
+	<head>
+		<!-- Boostrap components -->
+        <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+        <link rel="stylesheet" href="/animate.css">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+		<script src="/aws-sdk.min.js"></script>
+		<script src="/jquery.min.js"></script>
+		<script src="/amazon-cognito.min.js"></script>
+		<script src="/jquery.nicefileinput.min.js"></script>
+
+		
+		<nav class="navbar navbar-default navbar-fixed-top">
+
+		  <div class="container">
+
+				<a href="#" class="navbar-brand">Teach</a>
+				<ul class="nav navbar-left">
+					<li role="presentation"><a href="/classes"><b>Learn</b></a></li>
+				</ul>
+				<h1 class="hidden" id="keyholder"><%= username %></h1>
+		   		<a href="/logout" class="navbar-text navbar-right">Log Out</a>
+		  		<p class="navbar-text navbar-right">Signed in as <a href="#" class="navbar-link"><%= username %></a></p>
+		   </div>
+		</nav>
+	</head>
+
+
+	<body class="body">
+		<br>
+		<br>
+		<br>
+		<h1 class="animated fadeIn"><b>Upload a Lecto</b></h1>
+		<div class="jumbotron text-center">
+			<body align="center">
+				<div>
+					<!-- Replace the 'newsession' with s3 bucket name -->
+						<label for="name">Name: </label>
+						<br>
+						<input type="text" id="name" name="name" placeholder="Enter a username">
+						<br>
+						<br>
+						<label for="name">Class: </label>
+						<br>
+						<input type="text" id="class" name="subject" placeholder="Enter a class">
+						<br>
+						<br>
+						<label for="school">School: </label> 
+						<br>
+						<select id="school" class="box" name ="schools" maxlength="194"> 
+							<option value="Select">Select a School</option>
+							<option value="UC Berkeley">UC Berkeley</option>
+						</select> 
+						<br>
+						<br>
+						<input id="uploadBtn" type="file" name="file" />
+						<br>
+						<input type="checkbox" name="terms" id="terms">
+						<a href="#">I accept the Terms and Conditions</a>
+						<br>
+						<br>
+ 						<input id="submit-button" type="submit" class="btn btn-primary" value="Upload"/>
+
+				</div>
+
+				<progress id="fileProgress" max="100" class="hidden">
+				</progress>
+				
+				<script type="text/javascript">
+					//Makes the file input tag look a lot nicer
+					$(document).ready(function(){
+						$("input[type=file]").nicefileinput();
+					});
+
+					//Set the cognito credentials and do the aws stuff 
+					AWS.config.region= 'us-east-1'
+					AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+						IdentityPoolId: 'us-east-1:25457026-c042-4aa1-b844-be70570b71ec',
+					});
+					AWS.config.credentials.get(function(){
+						var syncClient = new AWS.CognitoSyncManager();
+						syncClient.openOrCreateDataset('myDataset', function(err, dataset){
+							dataset.put('myKey', 'myValue');
+							data.synchronize({
+								onSuccess: function(data, newRecords){
+									console.log(data);
+								}
+							})
+						})
+					})
+					var bucket = new AWS.S3({params: {Bucket: 'lecto-vids'}});
+					var fileChooser = document.getElementById('uploadBtn');
+					var button = document.getElementById('submit-button');
+					button.addEventListener('click', function(){
+
+						var username = $("#keyholder").html();
+
+						var lect_name = $("#name").val();
+						var lect_class = $("#class").val();
+						var lect_school = $("#school").val();
+
+						console.log(lect_name);
+						console.log(lect_class);
+						console.log(lect_school);
+						console.log(username);
+
+						var filename = username + " " + lect_name + " " + lect_class + " " + lect_school; 
+ 
+						var file = fileChooser.files[0];
+						if(file){
+							console.log('nice');
+							var params = {Key: filename, ContentType: 'audio/mpeg', Body: file};
+							var request = bucket.upload(params, function(err, data){
+								if(err){
+									console.log(err)
+								} else {
+									console.log(data);
+								}
+							})
+
+							//Console currently logs the progresss of the file upload, turn this into a progress bar later on
+							request.on('httpUploadProgress', function(progress){
+								var percent = (progress.loaded/progress.total) * 100; 
+								var progDiv = document.getElementById("fileProgress");
+								var progDiv.className = 
+								progDiv.value = percent; 
+								console.log(progress.loaded + " of " + progress.total + " bytes");
+							})
+						} else {
+							console.log('nothing to upload');
+						}
+					}, false)
+				</script>
+
+			</body>
+		</div>
+	</body>
+</html>
