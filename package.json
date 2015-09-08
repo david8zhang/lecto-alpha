@@ -8,6 +8,7 @@
   "main": "app.js",
   "dependencies": {
     "aws-sdk": "^2.1.46",
+    "bcryptjs": "^2.2.1",
     "body-parser": "^1.13.3",
     "bower": "^1.4.1",
     "connect-flash": "^0.1.1",
