@@ -80,9 +80,7 @@ passport.use(new passportLocal.Strategy(function(username, password, done){
 			console.log(jsonString);
 
 			if(bcrypt.compareSync(password,jsonString["Items"][0].password)) //returns True if the password is equal to the hash, otherwise False
-			{
-
-					
+			{		
 				 if(jsonString["Count"] != 0){
 					console.log(jsonString["Items"][0].token)
 					//Check if the user has activated through their email
@@ -93,7 +91,7 @@ passport.use(new passportLocal.Strategy(function(username, password, done){
 						done(null, {id: username, name: jsonString["Items"].username});
 
 					}
-				}else{
+				} else{
 					done(null, false, {message: 'Incorrect username or password'})
 				}
 			}
