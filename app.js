@@ -1,6 +1,7 @@
 // idk what this does
 var path = require('path')
-
+var bcrypt = require('bcryptjs'); //so you can use bcrypt features
+var hash;
 //Initialize Express
 var express = require('express');
 var flash = require('connect-flash');
@@ -66,8 +67,10 @@ passport.use(new passportLocal.Strategy(function(username, password, done){
 	var queryParams = {};
 	queryParams.TableName = 'lecto-teachers';
 	queryParams.KeyConditions = [docClient.Condition('username', 'EQ', username)];
+  
 
-	queryParams.QueryFilter = docClient.Condition('password', 'EQ', bcrypt.hashSync(password));//If docClient.Condition checks for equality this
+
+	/*queryParams.QueryFilter = docClient.Condition('password', 'EQ', docClient.getItem();*/ //If docClient.Condition checks for equality this
 	docClient.query(queryParams, function(err, result){                                        //Otherwise we can use bcrypt.compareSync(__), which
 		if(err){                                                                               //returns a boolean value based on equality
 			done(new Error('Oh Shit!'));
@@ -75,16 +78,22 @@ passport.use(new passportLocal.Strategy(function(username, password, done){
 		} else {
 			jsonString = JSON.parse(JSON.stringify(result))
 			console.log(jsonString);
-			if(jsonString["Count"] == 0){
-				done(null, false, {message: 'Incorrect username or password'})
-			} else {
-				console.log(jsonString["Items"][0].token)
-				//Check if the user has activated through their email
-				if(jsonString["Items"][0].token == "null"){
-					done(null, false, {message: 'Account not activated. Please check your email'})
+
+			if(bcrypt.compareSync(password,jsonString["Items"][0].password)) //returns True if the password is equal to the hash, otherwise False
+			{
+
+				if(jsonString["Count"] == 0){
+					done(null, false, {message: 'Incorrect username or password'})
 				} else {
-					//Checks if there is an authentication token (to indicate that the user has authenticated)
-					done(null, {id: username, name: jsonString["Items"].username});
+					console.log(jsonString["Items"][0].token)
+					//Check if the user has activated through their email
+					if(jsonString["Items"][0].token == "null"){
+						done(null, false, {message: 'Account not activated. Please check your email'})
+					} else {
+						//Checks if there is an authentication token (to indicate that the user has authenticated)
+						done(null, {id: username, name: jsonString["Items"].username});
+
+					}
 				}
 			}
 		}
@@ -279,10 +288,10 @@ function register(username, password, email){
 	//npm install bcrypt in order for this to work
 
 	//Obtains secure random numbers
-	var bcrypt = require('bcryptjs');
+	
 
 	var salt = bcrypt.genSaltSync(10);
-	var hash = bcrypt.hashSync(password, salt);
+	hash = bcrypt.hashSync(password, salt);
 
 	//Add more parameters later (comments, reviews)
 	//replaced password with hash (because we never store the password, just the hash of the password)
@@ -292,6 +301,7 @@ function register(username, password, email){
 			console.log(err, err.stack)
 		} else {
 			console.log("Account successfully created!");
+			console.log(params);
 		}
 	})
 }
