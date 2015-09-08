@@ -164,6 +164,7 @@ app.get('/session', function(req, res){
 	});
 })
 
+//Get the student page for the livestreaming service
 app.get('/student', function(req, res){
 	var sessID = req.query.sid;
 	var username = sessID.substring(sessID.indexOf(" ") + 1);
@@ -205,9 +206,22 @@ app.get('/activate/:token', function(req, res){
 	res.redirect('/login');
 })
 
+//Success screen after account creation
 app.get('/success', function(req, res){
 	res.render('success');
 })
+
+
+app.get('/lecto', function(req, res){
+	var access = AWS_ACCESS_KEY;
+	var secret = AWS_SECRET_KEY;
+	res.render('lecto', {
+		username: req.user.name,
+		access: access,
+		secret: secret
+	});
+});
+
 
 //post registration information
 app.post('/register', function(req, res){
@@ -260,6 +274,11 @@ app.post('/dashboard', function(req, res){
 	deleteSession(req.body.username)
 	res.redirect('/dashboard')
 })
+
+app.post('/goodupload', function(req, res){
+	res.render('goodupload')
+});
+
 
 //Post the new session information
 app.post('/newsession', function(req, res){
