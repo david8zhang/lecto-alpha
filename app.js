@@ -127,6 +127,10 @@ app.get('/logout', function(req, res){
 	res.redirect('/')
 });
 
+app.get('/category', function(req, res){
+	res.render('category')
+})
+
 //Get the classes page
 app.get('/classes', function(req, res){
 	listSessions(function(sessions){
@@ -141,6 +145,14 @@ app.get('/classes', function(req, res){
 		});
 	})
 });
+
+app.get('/archives', function(req, res){
+	getFiles(function(data){
+		res.render("archives", {
+			secList: data
+		})
+	})
+})
 
 //get the registration page
 app.get('/register', function(req, res){
@@ -434,6 +446,26 @@ function activate(user, token){
 			console.log(err, err.stack)
 		} else {
 			console.log("Account activated!")
+		}
+	})
+}
+
+function getFiles(callback){
+	var params = {};
+	params.Bucket = 'lecto-vids';
+	params.EncodingType = "url";
+
+	s3.listObjects(params, function(err, data){
+		if(err){
+			console.log(err);
+		} else {
+			var jsonString = JSON.parse(JSON.stringify(data));
+			var list = [];
+			console.log(jsonString["Contents"].length);
+			for(var i = 0; i < jsonString["Contents"].length; i ++){
+				list.push(jsonString["Contents"][i].Key);
+			}
+			callback(list);
 		}
 	})
 }

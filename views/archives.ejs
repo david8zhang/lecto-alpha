@@ -54,13 +54,8 @@
 		<br>
 		<br>
 		<div class="container">
-			<h1 class="text-center">Live Classes</h1>
+			<h1 class="text-center">Video Sections</h1>
 			<div class="row">
-				<% classList.forEach(function(user){ %> 
-					<div class="col-md-2 text-center">
-						<a href="#" onclick="clickHandler(event)"><%=user%></a>
-					</div>
-				<%	}); %>
 			</div>
 		</div>
 	</body>
@@ -70,13 +65,12 @@
 	<script src="/socket.io/socket.io.js"></script>  
 
 	<script>
-		function clickHandler(event){
-			var input = document.getElementById("sessionID");
-			input.value = event.target.innerHTML;
-			var someForm = document.getElementById("someform");
-			someForm.submit();
-		}
-		
+		// function clickHandler(event){
+		// 	var input = document.getElementById("sessionID");
+		// 	input.value = event.target.innerHTML;
+		// 	var someForm = document.getElementById("someform");
+		// 	someForm.submit();
+		// }	
 	</script> 
 
 </html>
