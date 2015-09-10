@@ -110,7 +110,7 @@ passport.deserializeUser(function(id, done){
 })
 
 
-/**********************************ROUTES**********************************/
+/**********************************ROUTES**********************************/ //TODO: Move this to a separate routes page
 //Get the homepage
 app.get('/', function(req, res){
 	res.render('index');
@@ -147,9 +147,12 @@ app.get('/classes', function(req, res){
 });
 
 app.get('/archives', function(req, res){
+	//Gets the names by parsing it out of the raw filename from s3
 	getFiles(function(data){
+		var names = parseList(data);
 		res.render("archives", {
-			secList: data
+			secList: data,
+			nameList: names
 		})
 	})
 })
@@ -223,12 +226,8 @@ app.get('/success', function(req, res){
 
 
 app.get('/lecto', function(req, res){
-	var access = AWS_ACCESS_KEY;
-	var secret = AWS_SECRET_KEY;
 	res.render('lecto', {
-		username: req.user.name,
-		access: access,
-		secret: secret
+		username: req.user.name
 	});
 });
 
@@ -317,7 +316,6 @@ function register(username, password, email){
 	params.TableName = 'lecto-teachers';
 
 	//npm install bcrypt in order for this to work
-
 	//Obtains secure random numbers
 	
 
@@ -431,6 +429,7 @@ function generateAuthToken(done){
 	})
 }
 
+//Attach an authentication token to the user's account in the DynamoDB
 function activate(user, token){
 	var params = {};
 	params.TableName = 'lecto-teachers';
@@ -450,6 +449,7 @@ function activate(user, token){
 	})
 }
 
+//Lists all the files 
 function getFiles(callback){
 	var params = {};
 	params.Bucket = 'lecto-vids';
@@ -469,6 +469,20 @@ function getFiles(callback){
 		}
 	})
 }
+
+//Parses the names out of the raw datalist of s3 file urls
+function parseList(list){
+	var nameStrings = [];
+	for(var i = 0; i < list.length; i++){
+		var rawString = list[i];
+		var parsedString = rawString.substring(rawString.indexOf('/') + 1, rawString.indexOf("+"));
+		var nameString = parsedString.replace("%25", " ");
+		nameStrings.push(nameString);
+	}
+	return nameStrings;
+
+}
+
 
 //Load external assets for front-end
 app.use(express.static(__dirname + '/public'));

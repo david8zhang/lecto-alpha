@@ -129,6 +129,7 @@
 					AWS.config.credentials = new AWS.CognitoIdentityCredentials({
 						IdentityPoolId: 'us-east-1:25457026-c042-4aa1-b844-be70570b71ec',
 					});
+					//Get the config credentials form AWS cognito
 					AWS.config.credentials.get(function(){
 						var syncClient = new AWS.CognitoSyncManager();
 						syncClient.openOrCreateDataset('myDataset', function(err, dataset){
@@ -154,8 +155,13 @@
 						console.log(lect_school);
 						console.log(username);
 
-						var filename = username + "&" + lect_name + "&" + lect_class + "&" + lect_school; 
- 
+						//Create the url name from the 'form' data
+						// var filename = username + "/" + lect_name + "%" + lect_class + " " + 
+						// lect_school;
+
+						var filename = lect_name + "%" + lect_class + " " + lect_school + " " + username; 
+
+						//Actual file uploading logic
 						var file = fileChooser.files[0];
 						if(file){
 							console.log('nice');
@@ -169,14 +175,22 @@
 							})
 							//Console currently logs the progresss of the file upload, turn this into a progress bar later on
 							request.on('httpUploadProgress', function(progress){
+
+								//Instantiate the loading bar
 								var percent = (progress.loaded/progress.total) * 100; 
 								var progDiv = document.getElementById("fileProgress");
 								progDiv.className = "visible";
 								progDiv.value = percent; 
 								console.log(progress.loaded + " of " + progress.total + " bytes");
+								
 								if(percent == 100){
-									var form = document.getElementById("progform")
-									form.submit();
+									//Delay them so that the sessions can finish uploading to s3 first
+									var millisecondsToWait = 2000;
+									setTimeout(function(){
+										var form = document.getElementById("progform")
+										form.submit();
+									}, millisecondsToWait);
+	
 								}				
 							})
 						} else {

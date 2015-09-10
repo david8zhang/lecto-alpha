@@ -26,7 +26,7 @@
 			width:100%;
 		}
 		
-		.hiddenform{
+		.hidden{
 			visibility:hidden;
 		}
 	</style>
@@ -46,7 +46,7 @@
 	</head>
 	
 	<body class="body">
-		<form class="hiddenform" id="someform" action="/student" method='post'>
+		<form class="hidden" id="someform" action="/student" method='post'>
 			<input type="text" id="sessionID" name="sessionID">
 			<input type="submit">
 		</form>
@@ -56,6 +56,17 @@
 		<div class="container">
 			<h1 class="text-center">Video Sections</h1>
 			<div class="row">
+				<% nameList.forEach(function(name){ %> 
+					<div class="col-md-2 text-center">
+						<a href="#"><%=name%></a>
+					</div>
+				<%	}); %>
+
+				<% secList.forEach(function(section){ %> 
+					<div class="hidden">
+						<a href="#"><%=section%></a>
+					</div>
+				<%	}) %>
 			</div>
 		</div>
 	</body>
@@ -65,12 +76,7 @@
 	<script src="/socket.io/socket.io.js"></script>  
 
 	<script>
-		// function clickHandler(event){
-		// 	var input = document.getElementById("sessionID");
-		// 	input.value = event.target.innerHTML;
-		// 	var someForm = document.getElementById("someform");
-		// 	someForm.submit();
-		// }	
+	
 	</script> 
 
 </html>
