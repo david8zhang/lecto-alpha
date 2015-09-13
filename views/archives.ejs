@@ -29,6 +29,12 @@
 		.hidden{
 			visibility:hidden;
 		}
+		h1{
+			visibility:hidden;
+		}
+		.idtag{
+			visibility:hidden;
+		}
 	</style>
 	<head>
 		<!-- Boostrap components -->
@@ -46,7 +52,7 @@
 	</head>
 	
 	<body class="body">
-		<form class="hidden" id="someform" action="/student" method='post'>
+		<form class="hidden" id="someform" action="/newlect" method='post'>
 			<input type="text" id="sessionID" name="sessionID">
 			<input type="submit">
 		</form>
@@ -56,17 +62,12 @@
 		<div class="container">
 			<h1 class="text-center">Video Sections</h1>
 			<div class="row">
-				<% nameList.forEach(function(name){ %> 
+				<% for(var i = 0; i < secList.length; i ++){ %> 
 					<div class="col-md-2 text-center">
-						<a href="#"><%=name%></a>
+						<a href="#" class="idkey" onclick="sendLink(event)"><%=nameList[i]%></a> 
+						<a href="#" class="idtag"><%=secList[i]%></a>
 					</div>
-				<%	}); %>
-
-				<% secList.forEach(function(section){ %> 
-					<div class="hidden">
-						<a href="#"><%=section%></a>
-					</div>
-				<%	}) %>
+				<%	} %>
 			</div>
 		</div>
 	</body>
@@ -76,7 +77,33 @@
 	<script src="/socket.io/socket.io.js"></script>  
 
 	<script>
-	
+		//# IDEA NUMBER ONE FOR STYLING INDIVIDUAL ARCHIVE ELEMENTS
+		//1. Set the a tag as some common css class
+		//2. Grab all the a tags using getElementsByClassName 
+		//3. Iterate thhrough all elements assigning each a unique div id number
+		//4. Append the div id to the unique innerHTML and store it into an array
+		//5. Whenever an element is clicked, check its div id and compare against this array
+		//6. Get corresponding link and send it to the server
+		var vids = document.getElementsByClassName("idtag");
+		var keys = document.getElementsByClassName("idkey");
+		var vid_urls = [];
+		for(var i = 0; i < vids.length; i++){
+			keys[i].id = i + 1;
+			vids[i].id = i;
+			vid_urls.push(vids[i].innerHTML);
+		}	
+
+		function sendLink(event){
+			var input = document.getElementById("sessionID");
+			var val = event.target.id;
+			//Debug print statements
+			console.log("the id is " + val);
+			console.log("The link array is " + vid_urls);
+			
+			input.value = vid_urls[val - 1];
+			var someform = document.getElementById("someform");
+			someform.submit();
+		}
 	</script> 
 
 </html>

@@ -199,6 +199,14 @@ app.get('/student', function(req, res){
 	console.log(username);
 });
 
+//Get the new lecture
+app.get('/newlect', function(req, res){
+	var sessID = req.query.vid;
+	res.render('newlect', {
+		vid: sessID
+	})
+})
+
 //Get the sessions
 app.get('/classroom', function(req, res){
 	getSession(req.user.name, function(result){
@@ -224,13 +232,14 @@ app.get('/success', function(req, res){
 	res.render('success');
 })
 
-
+//get lecto
 app.get('/lecto', function(req, res){
 	res.render('lecto', {
 		username: req.user.name
 	});
 });
 
+/**************** POST CALLS *********************/
 
 //post registration information
 app.post('/register', function(req, res){
@@ -271,9 +280,16 @@ app.post('/register', function(req, res){
 	res.redirect('/success')
 });
 
+//redirect to the embedded live stream 
 app.post('/student', function(req, res){
 	var sid = encodeURIComponent(req.body.sessionID);
 	res.redirect('/student?sid=' + sid);
+})
+
+//redirect to the newlect page
+app.post('/newlect', function(req, res){
+	var vid = encodeURIComponent(req.body.sessionID);
+	res.redirect('/newlect?vid=' + vid);
 })
 
 //Post login information - redirect accordingly and show the respective messages 
@@ -284,6 +300,7 @@ app.post('/dashboard', function(req, res){
 	res.redirect('/dashboard')
 })
 
+//Redirects to this page once it's done uploading a video
 app.post('/goodupload', function(req, res){
 	res.render('goodupload')
 });
