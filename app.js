@@ -231,6 +231,9 @@ app.get('/lecto', function(req, res){
 	});
 });
 
+app.get('/notes', function(req, res){
+	res.render('notes')
+})
 
 //post registration information
 app.post('/register', function(req, res){
@@ -303,6 +306,7 @@ app.post('/newsession', function(req, res){
 		res.redirect('/classroom')
 	}, millisecondsToWait)
 });
+
 
 
 /*********************************SOCKET IO*************************************/

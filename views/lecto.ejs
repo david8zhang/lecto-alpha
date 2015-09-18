@@ -155,9 +155,7 @@
 						console.log(lect_school);
 						console.log(username);
 
-						//Create the url name from the 'form' data
-						// var filename = username + "/" + lect_name + "%" + lect_class + " " + 
-						// lect_school;
+						
 
 						var filename = lect_name + "%" + lect_class + " " + lect_school + " " + username; 
 
@@ -165,7 +163,7 @@
 						var file = fileChooser.files[0];
 						if(file){
 							console.log('nice');
-							var params = {Key: filename, ContentType: 'audio/mpeg', Body: file};
+							var params = {Key: filename, ContentType: 'audio/mpeg/pdf', Body: file};
 							var request = bucket.upload(params, function(err, data){
 								if(err){
 									console.log(err)
