@@ -224,16 +224,12 @@ app.get('/success', function(req, res){
 	res.render('success');
 })
 
-
+//Render the lecto page
 app.get('/lecto', function(req, res){
 	res.render('lecto', {
 		username: req.user.name
 	});
 });
-
-app.get('/notes', function(req, res){
-	res.render('notes')
-})
 
 //post registration information
 app.post('/register', function(req, res){
