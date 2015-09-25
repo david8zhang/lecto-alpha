@@ -58,7 +58,7 @@
 		<br>
 		<div class="container">
 			<div id='videos'>
-				
+				<video id="remoteStream" autoplay controls></video>
 			</div>	
 		</div>
 		
@@ -91,6 +91,12 @@
 			}
 		}
 
+		participant.onstream = function(event){
+			var vidElement = document.getElementById("remoteStream");
+			vidElement.volume = 0.2;
+			vidElement.src = URL.createObjectURL(event.stream);
+		}
+
 		participant.body = document.getElementById("videos");
 
 		participant.sdpConstraints.mandatory = {
@@ -99,6 +105,7 @@
 		}
 
 		participant.join(sessionDescription);
+
 	</script>
 
 </html>
