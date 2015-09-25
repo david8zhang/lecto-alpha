@@ -232,7 +232,7 @@ app.get('/success', function(req, res){
 	res.render('success');
 })
 
-//get lecto
+//Render the lecto page
 app.get('/lecto', function(req, res){
 	res.render('lecto', {
 		username: req.user.name
@@ -240,7 +240,6 @@ app.get('/lecto', function(req, res){
 });
 
 /**************** POST CALLS *********************/
-
 //post registration information
 app.post('/register', function(req, res){
 	username = req.body.name;
@@ -320,6 +319,7 @@ app.post('/newsession', function(req, res){
 		res.redirect('/classroom')
 	}, millisecondsToWait)
 });
+
 
 
 /*********************************SOCKET IO*************************************/

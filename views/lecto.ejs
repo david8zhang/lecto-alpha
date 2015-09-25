@@ -44,10 +44,9 @@
 		.navbar {
 			box-shadow: 0 5px 5px #333;
 		}
-		.viisble{
+		.visible{
 			visibility: visible;
 		}
-
 		</style>
 	<head>
 		<!-- Boostrap components -->
@@ -61,7 +60,6 @@
 
 		
 		<nav class="navbar navbar-default navbar-fixed-top">
-
 		  <div class="container">
 
 				<a href="#" class="navbar-brand">Teach</a>
@@ -74,138 +72,207 @@
 		   </div>
 		</nav>
 	</head>
+		<body class="body">
+			<br><br><br>
+			<div id="lectos" class="visible">
+				<h1 class="animated fadeIn"><b>Upload a Lecto</b></h1>
+				<div class="jumbotron text-center animated fadeIn">
+					<body align="center">
+						<div>
+							<!-- Replace the 'newsession' with s3 bucket name -->
+							<label for="name">Name: </label>
+							<br>
+							<input type="text" id="name" name="name" placeholder="Enter a lecto name">
+							<br>
+							<br>
+							<label for="name">Class: </label>
+							<br>
+							<input type="text" id="class" name="subject" placeholder="Enter a class">
+							<br>
+							<br>
+							<label for="school">School: </label> 
+							<br>
+							<select id="school" class="box" name ="schools" maxlength="194"> 
+								<option value="Select">Select a School</option>
+								<option value="UC Berkeley">UC Berkeley</option>
+							</select> 
+							<br>
+							<br>
+							<input id="uploadVid" type="file" name="file" />
+							<br>
+							<input type="checkbox" name="terms" id="terms">
+							<a href="#">I accept the Terms and Conditions</a>
+							<br>
+							<br>
+							<input id="submit-lecto" type="submit" class="btn btn-primary" value="Upload"/>
+						</div>
 
+						<form id="progform" action="/goodupload" method="post">
+						</form>
 
-	<body class="body">
-		<br>
-		<br>
-		<br>
-		<h1 class="animated fadeIn"><b>Upload a Lecto</b></h1>
-		<div class="jumbotron text-center">
-			<body align="center">
-				<div>
-					<!-- Replace the 'newsession' with s3 bucket name -->
-					<label for="name">Name: </label>
-					<br>
-					<input type="text" id="name" name="name" placeholder="Enter a username">
-					<br>
-					<br>
-					<label for="name">Class: </label>
-					<br>
-					<input type="text" id="class" name="subject" placeholder="Enter a class">
-					<br>
-					<br>
-					<label for="school">School: </label> 
-					<br>
-					<select id="school" class="box" name ="schools" maxlength="194"> 
-						<option value="Select">Select a School</option>
-						<option value="UC Berkeley">UC Berkeley</option>
-					</select> 
-					<br>
-					<br>
-					<input id="uploadBtn" type="file" name="file" />
-					<br>
-					<input type="checkbox" name="terms" id="terms">
-					<a href="#">I accept the Terms and Conditions</a>
-					<br>
-					<br>
-					<input id="submit-button" type="submit" class="btn btn-primary" value="Upload"/>
-				</div>
+						<progress id="fileProgress" max="100" class="hidden">
+						</progress>
+						
+						<script type="text/javascript">
+							var filename = null; 
+							//Makes the file input tag look a lot nicer
+							$(document).ready(function(){
+								$("input[type=file]").nicefileinput();
+							});
 
-				<form id="progform" action="/goodupload" method="post">
-				</form>
-
-				<progress id="fileProgress" max="100" class="hidden">
-				</progress>
-				
-				<script type="text/javascript">
-					//Makes the file input tag look a lot nicer
-					$(document).ready(function(){
-						$("input[type=file]").nicefileinput();
-					});
-
-					//Set the cognito credentials and do the aws stuff 
-					AWS.config.region= 'us-east-1'
-					AWS.config.credentials = new AWS.CognitoIdentityCredentials({
-						IdentityPoolId: 'us-east-1:25457026-c042-4aa1-b844-be70570b71ec',
-					});
-					//Get the config credentials form AWS cognito
-					AWS.config.credentials.get(function(){
-						var syncClient = new AWS.CognitoSyncManager();
-						syncClient.openOrCreateDataset('myDataset', function(err, dataset){
-							dataset.put('myKey', 'myValue');
-							data.synchronize({
-								onSuccess: function(data, newRecords){
-									console.log(data);
-								}
+							//Set the cognito credentials and do the aws stuff 
+							AWS.config.region= 'us-east-1'
+							AWS.config.credentials = new AWS.CognitoIdentityCredentials({
+								IdentityPoolId: 'us-east-1:25457026-c042-4aa1-b844-be70570b71ec',
+							});
+							//Get the config credentials form AWS cognito
+							AWS.config.credentials.get(function(){
+								var syncClient = new AWS.CognitoSyncManager();
+								syncClient.openOrCreateDataset('myDataset', function(err, dataset){
+									dataset.put('myKey', 'myValue');
+									data.synchronize({
+										onSuccess: function(data, newRecords){
+											console.log(data);
+										}
+									})
+								})
 							})
-						})
-					})
-					var bucket = new AWS.S3({params: {Bucket: 'lecto-vids'}});
-					var fileChooser = document.getElementById('uploadBtn');
-					var button = document.getElementById('submit-button');
-					button.addEventListener('click', function(){
-						var username = $("#keyholder").html();
-						var lect_name = $("#name").val();
-						var lect_class = $("#class").val();
-						var lect_school = $("#school").val();
+							var bucket = new AWS.S3({params: {Bucket: 'lecto-vids'}});
+							var fileChooser = document.getElementById('uploadVid');
+							var button = document.getElementById('submit-lecto');
+							button.addEventListener('click', function(){
 
-						username = username.replace(/\s/g, '');
-						lect_name = lect_name.replace(/\s/g, ''); 
-						lect_class = lect_class.replace(/\s/g, '');
-						lect_school = lect_school.replace(/\s/g, '');
- 
+								var username = $("#keyholder").html();
+								var lect_name = $("#name").val();
+								var lect_class = $("#class").val();
+								var lect_school = $("#school").val();
 
-						console.log(lect_name);
-						console.log(lect_class);
-						console.log(lect_school);
-						console.log(username);
+								console.log(lect_name);
+								console.log(lect_class);
+								console.log(lect_school);
+								console.log(username);
 
-						//Create the url name from the 'form' data
-						// var filename = username + "/" + lect_name + "%" + lect_class + " " + 
-						// lect_school;
+								filename = lect_name + "%" + lect_class + " " + lect_school + " " + username
 
-						var filename = lect_name + "%" + lect_class + " " + lect_school + " " + username; 
+								//Actual file uploading logic
+								var file = fileChooser.files[0];
+								if(file){
+									console.log('nice');
+									var params = {Key: filename, ContentType: 'audio/mpeg/pdf', Body: file};
+									var request = bucket.upload(params, function(err, data){
+										if(err){
+											console.log(err)
+										} else {
+											console.log(data);
+										}
+									})
+									//Console currently logs the progresss of the file upload, turn this into a progress bar later on
+									request.on('httpUploadProgress', function(progress){
 
-						//Actual file uploading logic
-						var file = fileChooser.files[0];
-						if(file){
-							console.log('nice');
-							var params = {Key: filename, ContentType: 'audio/mpeg', Body: file};
-							var request = bucket.upload(params, function(err, data){
-								if(err){
-									console.log(err)
+										//Instantiate the loading bar
+										var percent = (progress.loaded/progress.total) * 100; 
+										var progDiv = document.getElementById("fileProgress");
+										progDiv.className = "visible";
+										progDiv.value = percent; 
+										console.log(progress.loaded + " of " + progress.total + " bytes");
+										
+										if(percent == 100){
+											//Delay them so that the sessions can finish uploading to s3 first
+											var millisecondsToWait = 2000;
+											setTimeout(function(){
+												askpdf();
+											}, millisecondsToWait);
+			
+										}				
+									})
 								} else {
-									console.log(data);
+									console.log('nothing to upload');
 								}
 							})
-							//Console currently logs the progresss of the file upload, turn this into a progress bar later on
-							request.on('httpUploadProgress', function(progress){
-
-								//Instantiate the loading bar
-								var percent = (progress.loaded/progress.total) * 100; 
-								var progDiv = document.getElementById("fileProgress");
-								progDiv.className = "visible";
-								progDiv.value = percent; 
-								console.log(progress.loaded + " of " + progress.total + " bytes");
-								
-								if(percent == 100){
-									//Delay them so that the sessions can finish uploading to s3 first
-									var millisecondsToWait = 2000;
-									setTimeout(function(){
-										var form = document.getElementById("progform")
-										form.submit();
-									}, millisecondsToWait);
-	
-								}				
-							})
-						} else {
-							console.log('nothing to upload');
+						
+						//Follow up pdf questions
+						function askpdf(){
+							document.getElementById("lectos").className = "hidden";
+							document.getElementById("submit-pdf").style.visibility="hidden";
+							document.getElementById("pdf-upload").className="hidden";
+							document.getElementById("pdf-ask").className = "visible";
 						}
-					}, false)
-				</script>
+						function setPDF(){
+							//Make the buttons hidden
+							document.getElementById("submit-notes").className="hidden";
+							document.getElementById("defer-video").className = "hidden";
 
-			</body>
-		</div>
-	</body>
+							//Make the upload and submit buttons visible
+							document.getElementById("pdf-upload").className="visible";
+							document.getElementById("submit-pdf").style.visibility="visible";
+
+							//Upload the pdf files
+							var notesBucket = new AWS.S3({params: {Bucket: 'lecto-notes'}});
+							var choosePdf = document.getElementById('pdf-upload-btn');
+							var submitPdf = document.getElementById('submit-pdf');
+
+							submitPdf.addEventListener('click', function(){
+								//Actual file uploading logic
+								var file = choosePdf.files[0];
+								if(file){
+									var params = {Key: filename, ContentType: 'application/pdf', Body: file};
+									var request = notesBucket.upload(params, function(err, data){
+										if(err){
+											console.log(err)
+										} else {
+											console.log(data);
+										}
+									})
+									//Console currently logs the progresss of the file upload, turn this into a progress bar later on
+									request.on('httpUploadProgress', function(progress){
+
+										//Instantiate the loading bar
+										var percent = (progress.loaded/progress.total) * 100; 
+										var progDiv = document.getElementById("pdfProgress");
+										progDiv.className = "visible";
+										progDiv.value = percent; 
+										console.log(progress.loaded + " of " + progress.total + " bytes");
+										
+										if(percent == 100){
+											//Delay them so that the sessions can finish uploading to s3 first
+											var millisecondsToWait = 2000;
+											setTimeout(function(){
+												setvid();
+											}, millisecondsToWait);
+			
+										}				
+									})
+								} else {
+									console.log('nothing to upload');
+								}
+							}, false)
+						}
+
+						function setvid(){
+							//Submit the form 
+							document.getElementById("progform").submit(); 
+						}
+						</script>
+
+					</body>
+				</div>
+			</div>
+
+			<!-- Pdf ask options -->
+			<div id="pdf-ask" class="hidden">
+				<h1 class="animated fadeIn"><b><center>Share your notes?</center></b></h1>
+				<h3 class="animated fadeIn"><b><center>You can add notes later if you want</center></b></h3>
+				<input id="submit-notes" onclick="setPDF()"class="btn btn-primary" value="Yes!"/>
+				<input id="defer-video" onclick="setvid()"class="btn btn-primary" value="Later"/>
+				<br>
+				<div id="pdf-upload"class="hidden">
+					<input id="pdf-upload-btn" type="file" name="file"/>
+				</div>
+				<br>
+				<input id="submit-pdf" type="submit" class="btn btn-primary" value="Upload"/>
+				<br>
+				<progress id="pdfProgress" max="100" class="hidden">
+				</progress>
+			</div>
+		</body>
 </html>
