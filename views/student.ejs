@@ -93,8 +93,18 @@
 
 		participant.onstream = function(event){
 			var vidElement = document.getElementById("remoteStream");
-			vidElement.volume = 0.2;
+			vidElement.volume = 0.1;
 			vidElement.src = URL.createObjectURL(event.stream);
+
+			//Gain node for context stuff
+			var context = new(window.AudioContext || window.webkitAudioContext)();
+			var sineWave = context.createOscillator(); 
+			sineWave.type = 0; //0 is sine wave
+			sineWave.connect(gainNode);
+			gainNode.connect(context.destination);
+			//Play sine wave
+			sineWave.noteOn(0);
+			gainNode.gain.value = 0.8
 		}
 
 		participant.body = document.getElementById("videos");
