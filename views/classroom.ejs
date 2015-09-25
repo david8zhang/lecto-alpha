@@ -53,18 +53,16 @@
 			</div>
 		</nav>	
 	</head>
-
+	<br>
+	<br>
 	<body class="text-center body">
 		<br>
 		<br>
-		<br>
 		<div class="container">
-			<div id='videos'>
-				<video id='localVideo' autoplay></video>
-			</div>	
+			<div id="videos"></div>
+			<a id="openNewSessionButton" class="btn btn-primary btn-lg" role="button">Start Session!</a>
 		</div>
-		
-
+		<br>
 		<div class="hidden" id="keyholder"><%=sessionid%></div>
 		<div class="container">
 			<div class="panel panel-default">
@@ -82,16 +80,38 @@
 
 	<script>
 		var sessID = document.getElementById("keyholder").innerHTML;
-		console.log("SessionID = " + sessID);
-		var webrtc = new SimpleWebRTC({
-			localVideoEl: 'localVideo',
-			autoRequestMedia: true
-		});
 
-		webrtc.on('readyToCall', function () {
-			webrtc.joinRoom(sessID);
-		});
+		//Set up RTC Multi Connection
+		var initiator = new RTCMultiConnection("sample");
 
+		initiator.session = {
+			audio: true,
+			video: true,
+			screen: false, 
+			data: false, 
+			oneway: true,
+			broadcast: false
+		}
+
+		//Set the session id
+		initiator.sessionid = sessID; 
+
+		//send session information more than once
+		initiator.transmitRoomOnce = false;
+		initiator.interval = 3000; 
+
+		initiator.sdpConstraints.mandatory = {
+			OfferToReceiveAudio: false, 
+			OfferToReceiveVideo: false,
+		}
+
+		initiator.body = document.getElementById("videos");
+
+		document.getElementById("openNewSessionButton").onclick = function(){
+			initiator.open("sample");
+			document.getElementById("openNewSessionButton").style.visibility = "hidden";
+		}
+		
 		function redirect(){
 			var form = document.getElementById("postform");
 			var username = document.getElementById("username");

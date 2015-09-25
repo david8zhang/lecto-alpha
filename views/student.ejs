@@ -46,9 +46,7 @@
 				<a href="/login" class="navbar-brand">Teach</a>
 				<ul class="nav nav-pills">
 					<li role="presentation"><a href="/"><b>Leave Session</b></a></li>
-					<li class="hidden" role="presentation"><a href="#" onclick="turnOnVideo()"><b>Turn On Video</b></a></li>
-					<li role="presentation"><a href="#" onclick="turnOnVideo()"><b>Go Premium</b></a></li>
-
+					<li role="presentation"><a href="#" ><b>Go Premium</b></a></li>
 				</ul>
 			</div>
 		</nav>	
@@ -60,8 +58,7 @@
 		<br>
 		<div class="container">
 			<div id='videos'>
-				<video id='localVideo' autoplay></video>
-				<div class="hidden" id="remoteVideos"></div>
+				
 			</div>	
 		</div>
 		
@@ -84,32 +81,24 @@
 	<script>
 		var sessID = document.getElementById("keyholder").innerHTML;
 		console.log(sessID);
-		var webrtc = new SimpleWebRTC({
-			remoteVideosEl: 'remoteVideos',
-			autoRequestMedia: true
-		});
 
-		webrtc.on('readyToCall', function () {
-			webrtc.joinRoom(sessID);
-		});
-
-		function turnOnVideo(){
-			var remote_vid = document.getElementById("remoteVideos");
-			remote_vid.className = "remoteStyle";
-
-			//Get all the remote video elements and make all but the first one hidden
-			var list = document.getElementsByTagName("VIDEO");
-			if(list.length > 0){
-				for(var i = 0; i < list.length; i++){
-					if(i > 1){
-						list[i].className = "hidden";
-					}
-				}
-			} else {
-				alert("could not get remote video. Try refreshing");
+		var participant = new RTCMultiConnection('sample')
+		var sessionDescription = {
+			sessionId: sessID,
+			session: {
+				audio: true,
+				video: false
 			}
-
 		}
+
+		participant.body = document.getElementById("videos");
+
+		participant.sdpConstraints.mandatory = {
+			OfferToReceiveAudio: true,
+			OfferToReceiveVideo: true 
+		}
+
+		participant.join(sessionDescription);
 	</script>
 
 </html>
