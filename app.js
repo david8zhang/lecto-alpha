@@ -50,7 +50,7 @@ app.set('view engine', 'ejs');
 //Use the other middleware
 app.use(bodyParser.urlencoded({extended: false }));
 app.use(cookieParser());
-app.use(expressSession({ secret: 'secret', 
+app.use(expressSession({ secret: 'secret',
 		resave: false,
 		saveUninitialized:false
 	}));
@@ -67,7 +67,7 @@ passport.use(new passportLocal.Strategy(function(username, password, done){
 	var queryParams = {};
 	queryParams.TableName = 'lecto-teachers';
 	queryParams.KeyConditions = [docClient.Condition('username', 'EQ', username)];
-  
+
 
 
 	/*queryParams.QueryFilter = docClient.Condition('password', 'EQ', docClient.getItem();*/ //If docClient.Condition checks for equality this
@@ -80,7 +80,7 @@ passport.use(new passportLocal.Strategy(function(username, password, done){
 			console.log(jsonString);
 
 			if(bcrypt.compareSync(password,jsonString["Items"][0].password)) //returns True if the password is equal to the hash, otherwise False
-			{		
+			{
 				 if(jsonString["Count"] != 0){
 					console.log(jsonString["Items"][0].token)
 					//Check if the user has activated through their email
@@ -95,10 +95,10 @@ passport.use(new passportLocal.Strategy(function(username, password, done){
 					done(null, false, {message: 'Incorrect username or password'})
 				}
 			}
-			
+
 		}
 	})
-})); 
+}));
 
 passport.serializeUser(function(user, done){
 	done(null, user.id)
@@ -134,7 +134,7 @@ app.get('/category', function(req, res){
 //Get the classes page
 app.get('/classes', function(req, res){
 	listSessions(function(sessions){
-		var list = []; 
+		var list = [];
 		jsonString = JSON.parse(JSON.stringify(sessions))
 		for(i = 0; i < jsonString["Items"].length; i++){
 			list.push(jsonString["Items"][i].title + " " + jsonString["Items"][i].name)
@@ -261,9 +261,9 @@ app.post('/register', function(req, res){
 			from: 'lecto.info@gmail.com',
 			to: email,
 			subject: 'Activate your account',
-			text: 'Please click on the link below to activate your account: \n\n' + 
-			'http://' + req.headers.host + '/activate/' + token + '&' + username + '\n\n' + 
-			'If you did not create an account, please ignore this email' 
+			text: 'Please click on the link below to activate your account: \n\n' +
+			'http://' + req.headers.host + '/activate/' + token + '&' + username + '\n\n' +
+			'If you did not create an account, please ignore this email'
 		};
 
 		transporter.sendMail(mailOptions, function(error, info){
@@ -279,7 +279,7 @@ app.post('/register', function(req, res){
 	res.redirect('/success')
 });
 
-//redirect to the embedded live stream 
+//redirect to the embedded live stream
 app.post('/student', function(req, res){
 	var sid = encodeURIComponent(req.body.sessionID);
 	res.redirect('/student?sid=' + sid);
@@ -291,7 +291,7 @@ app.post('/newlect', function(req, res){
 	res.redirect('/newlect?vid=' + vid);
 })
 
-//Post login information - redirect accordingly and show the respective messages 
+//Post login information - redirect accordingly and show the respective messages
 app.post('/login', passport.authenticate('local', {successRedirect:'/dashboard', failureRedirect:'/login', failureFlash: true}));
 
 app.post('/dashboard', function(req, res){
@@ -312,7 +312,7 @@ app.post('/newsession', function(req, res){
 	var price = req.body.price;
 	var title = req.body.name;
 	newSession(name, title, subject, price);
-	
+
 	//Delay them so that they can't just spam sessions
 	var millisecondsToWait = 5000;
 	setTimeout(function(){
@@ -323,7 +323,50 @@ app.post('/newsession', function(req, res){
 
 
 /*********************************SOCKET IO*************************************/
+//Usersnames which are currently connected to the chat
+var usernames = {};
+var rooms = [];
+// Socket.io connection for live text chat
+io.sockets.on('connection', function(socket){
+		//Joining rooms
+		socket.on('adduser', function(sessionDesc){
+			console.log(sessionDesc);
+			//store the username in the socket session for this client
+			var username = sessionDesc[0];
+			var roomName = sessionDesc[1];
 
+			//This is so the server knows who just joined the room
+			socket.username = username
+
+			//joining the actual chat room
+			socket.room = roomName;
+			socket.join(roomName);
+			rooms.push(roomName);
+
+			//Tell the client that a new user has joined this room
+			socket.emit('updatechat', 'SERVER', 'you have connected to ' + roomName);
+			socket.broadcast.to(roomName).emit('updateChat', 'SERVER', username + ' has connected to ' + roomName);
+			socket.emit('updateRooms', rooms, roomName);
+	});
+
+	//Sending actual chat messages
+	socket.on('sendchat', function(data){
+		//tell the client to execute 'updatechat' with 2 paramteres
+		io.sockets.in(socket.room).emit('updatechat', socket.username, data);
+	});
+
+	//What to tell the server when the client has disconnected
+	socket.on('disconnect', function(){
+		//remove he username from the usernames list
+		delete usernames[socket.username];
+		//update list of users in chat, client side
+		io.sockets.emit('updateusers', usernames);
+		//echo globally that this client has left
+		socket.broadcast.emit('updatechat', 'SERVER', socket.username + 'has disconnected');
+		socket.leave(socket.room);
+
+	})
+})
 
 /*********************************FUNCTIONS**************************************/
 //Creates the user account
@@ -334,7 +377,7 @@ function register(username, password, email){
 
 	//npm install bcrypt in order for this to work
 	//Obtains secure random numbers
-	
+
 
 	var salt = bcrypt.genSaltSync(10);
 	hash = bcrypt.hashSync(password, salt);
@@ -466,7 +509,7 @@ function activate(user, token){
 	})
 }
 
-//Lists all the files 
+//Lists all the files
 function getFiles(callback){
 	var params = {};
 	params.Bucket = 'lecto-vids';

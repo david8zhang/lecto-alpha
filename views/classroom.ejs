@@ -1,41 +1,86 @@
 <html>
 	<style>
+		.sidebar-layout{
+			position:absolute;
+			left:300px; top:68px; right:0; bottom:0;
+		}
+		.sidebar {
+			position:absolute;
+			left:0; top:67px; bottom: 0;
+			width: 300px;
+			background-color: white;
+		}
+		.chat{
+			height: 715px;
+			overflow: none;
+			width: 100%;
+			position: relative;
+		}
+		.chat-box{
+			position: absolute;
+			max-height: 715px;
+			width: 100%;
+			background-color: white;
+			text-align: left;
+			padding: 5 5 5 5;
+			overflow: auto;
+			bottom: 0;
+		}
+		.new-message{
+			position: absolute;
+			left: 0; top:90%; bottom: 0;
+			width: 300px;
+			border-style: solid;
+			border-color: #f6f6f6;
+			text-align: left;
+			padding-top: 5px;
+			padding-left: 5px;
+			padding: 5 5 5 5;
+			overflow: hidden;
+		}
 		.hidden{
 			visibility:hidden;
 		}
 		#remoteVideos {
 			opacity: 0;
 		}
-
+		#message-box{
+			margin-top: 10px;
+			margin-right: 10px;
+			margin-left: 10px;
+		}
 		li{
 			margin-top: 10px;
 		}
-
 		.body{
 			background-color:#B6C5D5;
 		}
-
-		#localvideo{
-			margin:5px;
-			border: 0 solid #333;
-			border-top: 15px solid #333;
-			border-bottom: 15px solid #333;
-			border-left: 15px solid #333;
-			border-right: 15px solid #333;
+		#chat-title{
+			font-style: italic;
+			background-color:#f6f6f6;
+			padding-top: 13px;
+			padding-bottom: 15px;
+			margin-top: 0px;
 		}
-
 		.navbar {
 			box-shadow: 0 5px 5px #333;
+		}
+		#sidebar {
+	    position:absolute;
+	    top:0; bottom:0; left:0;
+	    width:50px;
+	    background:#000;
 		}
 
 	</style>
 	<head>
 		<!-- Boostrap components -->
-        <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+	  <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="/adapter.js"></script>
 		<script src="/latest.js"></script>
-
+		<script src="/jquery.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
 
 		<meta name="keywords" content="JavaScript, WebRTC" />
 		<meta name="description" content="WebRTC codelab" />
@@ -50,37 +95,72 @@
 				<ul class="nav nav-pills">
 					<li role="presentation"><a href="#" onclick="redirect()"><b>End Session</b></a></li>
 				</ul>
-				
 			</div>
-		</nav>	
+		</nav>
 	</head>
 	<br>
 	<br>
-	<body class="text-center body">
-		<br>
-		<br>
-		<div class="container">
-			<div id="videos"></div>
-			<a id="openNewSessionButton" class="btn btn-primary btn-lg" role="button">Start Session!</a>
-		</div>
-		<br>
-		<div class="hidden" id="keyholder"><%=sessionid%></div>
-		<div class="container">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<h1><%=title%></h1>
-					<h3><%=subject%></h3>
-				</div>
-				<div class="panel-body">
-					<p>The price for video/premium on this lecture is $<%=price%></p>
+	<div class="sidebar-layout">
+		<body class="text-center body">
+			<br>
+			<div class="container">
+				<div id="videos"></div>
+				<a id="openNewSessionButton" class="btn btn-primary btn-lg" role="button">Start Session!</a>
+			</div>
+			<br>
+			<div class="hidden" id="keyholder"><%=sessionid%></div>
+			<div class="container">
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h1><%=title%></h1>
+						<h3><%=subject%></h3>
+					</div>
+					<div class="panel-body">
+						<p>The price for video/premium on this lecture is $<%=price%></p>
+					</div>
 				</div>
 			</div>
+		</body>
+	</div>
+	<div class="sidebar">
+		<h1 id="chat-title">#livechat</h1>
+		<div class="chat">
+			<div class="chat-box" id="chat-box">
+			</div>
 		</div>
-
-	</body>
-
+		<div class="new-message" id="msg" overflow="hidden" contenteditable="true">
+		</div>
+	</div>
 	<script>
 		var sessID = document.getElementById("keyholder").innerHTML;
+		var username = sessID.toString().substring(sessID.indexOf(" ") + 1);
+
+		//Socket.io for live text chatting
+		var socket = io.connect('http://localhost:5400');
+		socket.on('connect', function(data){
+			//get the username of the current host
+			socket.emit('adduser', [username, sessID]);
+		})
+
+		//listener, whenever the server emits to 'update chat', this listens
+		socket.on('updatechat', function(username, data){
+			console.log(data);
+			console.log(username);
+			$("#chat-box").append("<b>" + username.toString() + "</b>" + ": " + data.toString());
+			$("#chat-box").append("<br>");
+			$("#chat-box").scrollTop($("#chat-box")[0].scrollHeight);
+		})
+
+		//When the user clicks enter, send the message
+		$('#msg').keypress(function(e){
+			if(e.which == 13){
+				var message = document.getElementById("msg").innerHTML;
+				console.log(message);
+				socket.emit('sendchat', message);
+				$('#msg').empty();
+				e.preventDefault();
+			}
+		})
 
 		//Set up RTC Multi Connection
 		var initiator = new RTCMultiConnection("sample");
@@ -88,21 +168,20 @@
 		initiator.session = {
 			audio: true,
 			video: true,
-			screen: false, 
-			data: false, 
+			screen: false,
+			data: false,
 			oneway: true,
 			broadcast: false
 		}
-
 		//Set the session id
-		initiator.sessionid = sessID; 
+		initiator.sessionid = sessID;
 
 		//send session information more than once
 		initiator.transmitRoomOnce = false;
-		initiator.interval = 3000; 
+		initiator.interval = 3000;
 
 		initiator.sdpConstraints.mandatory = {
-			OfferToReceiveAudio: false, 
+			OfferToReceiveAudio: false,
 			OfferToReceiveVideo: false,
 		}
 
@@ -112,7 +191,7 @@
 			initiator.open("sample");
 			document.getElementById("openNewSessionButton").style.visibility = "hidden";
 		}
-		
+
 		function redirect(){
 			var form = document.getElementById("postform");
 			var username = document.getElementById("username");
