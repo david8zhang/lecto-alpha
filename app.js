@@ -345,7 +345,7 @@ io.sockets.on('connection', function(socket){
 
 			//Tell the client that a new user has joined this room
 			socket.emit('updatechat', 'SERVER', 'you have connected to ' + roomName);
-			socket.broadcast.to(roomName).emit('updateChat', 'SERVER', username + ' has connected to ' + roomName);
+			socket.broadcast.to(roomName).emit('updatechat', 'SERVER', username + ' has connected to ' + roomName);
 			socket.emit('updateRooms', rooms, roomName);
 	});
 
@@ -362,7 +362,7 @@ io.sockets.on('connection', function(socket){
 		//update list of users in chat, client side
 		io.sockets.emit('updateusers', usernames);
 		//echo globally that this client has left
-		socket.broadcast.emit('updatechat', 'SERVER', socket.username + 'has disconnected');
+		socket.broadcast.emit('updatechat', 'SERVER', socket.username + ' has disconnected');
 		socket.leave(socket.room);
 
 	})

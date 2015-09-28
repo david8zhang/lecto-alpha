@@ -1,5 +1,47 @@
 <html>
 	<style>
+		.sidebar-layout{
+			position:absolute;
+			left:300px; top:68px; right:0; bottom:0;
+		}
+		.sidebar{
+			position:absolute;
+			left:0; top:67px; bottom: 0;
+			width: 300px;
+			background-color: white;
+		}
+		.prompt{
+			height: 80%;
+			overflow: none;
+			width: 100%;
+			position: relative;
+		}
+		.chat{
+			height: 80%;
+			overflow: none;
+			width: 100%;
+			position: relative;
+		}
+		.chat-box{
+			position: absolute;
+			max-height: 100%;
+			width: 100%;
+			background-color: white;
+			text-align: left;
+			padding: 5 5 5 5;
+			overflow: auto;
+			bottom: 0;
+		}
+		.new-message{
+			position: absolute;
+			width:100%;
+			height: 10%;
+			border-style: solid;
+			border-color: #f6f6f6;
+			text-align: left;
+			padding: 5 5 5 5;
+			overflow: hidden;
+		}
 		.hidden{
 			visibility:hidden;
 		}
@@ -14,6 +56,13 @@
 
 		li{
 			margin-top: 10px;
+		}
+		#chat-title{
+			font-style: italic;
+			background-color:#f6f6f6;
+			padding-top: 13px;
+			padding-bottom: 15px;
+			margin-top: 0px;
 		}
 
 		.body{
@@ -31,12 +80,12 @@
 	</style>
 	<head>
 		<!-- Boostrap components -->
-        <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+  	<link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="/adapter.js"></script>
 		<script src="/latest.js"></script>
-
-
+		<script src="/jquery.min.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
 		<meta name="keywords" content="JavaScript, WebRTC" />
 		<meta name="description" content="WebRTC codelab" />
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1">
@@ -49,20 +98,19 @@
 					<li role="presentation"><a href="#" ><b>Go Premium</b></a></li>
 				</ul>
 			</div>
-		</nav>	
+		</nav>
 	</head>
-
-	<body class="text-center body">
-		<br>
-		<br>
+	<br>
+	<br>
+	<div class="sidebar-layout">
+		<body class="text-center body">
 		<br>
 		<div class="container">
-			<div id='videos'>
-				<video id="remoteStream" autoplay controls></video>
-			</div>	
+			<div id='videos'></div>
+				<h2 id="best-results">For best results, use headphones!</h2>
+				<a id="openNewSessionButton" class="btn btn-primary btn-lg" role="button">OK!</a>
 		</div>
-		
-
+		<br>
 		<div class="hidden" id="keyholder"><%=room%></div>
 		<div class="container">
 			<div class="panel panel-default">
@@ -75,12 +123,44 @@
 				</div>
 			</div>
 		</div>
-
 	</body>
-
+	</div>
+	<div class="sidebar" id="chat-sidebar">
+			<h1 id="chat-title">#livechat</h1>
+			<div class="chat">
+				<div class="chat-box" id="chat-box"></div>
+			</div>
+			<div class="new-message" id="msg" overflow="hidden" contenteditable="true"></div>
+	</div>
 	<script>
+		//Socket.io for live chatting
+		var socket = io.connect('http://localhost:5400');
 		var sessID = document.getElementById("keyholder").innerHTML;
-		console.log(sessID);
+		var username = prompt("What's your name?");
+			socket.on('connect', function(data){
+				socket.emit('adduser', [username, sessID]);
+			}
+		)
+		
+		//listener, whenever the server emits to 'update chat', this listens
+		socket.on('updatechat', function(username, data){
+			console.log(data);
+			console.log(username);
+			$("#chat-box").append("<b>" + username.toString() + "</b>" + ": " + data.toString());
+			$("#chat-box").append("<br>");
+			$("#chat-box").scrollTop($("#chat-box")[0].scrollHeight);
+		})
+
+		//When the user clicks enter, send the message
+		$('#msg').keypress(function(e){
+			if(e.which == 13){
+				var message = document.getElementById("msg").innerHTML;
+				console.log(message);
+				socket.emit('sendchat', message);
+				$('#msg').empty();
+				e.preventDefault();
+			}
+		})
 
 		var participant = new RTCMultiConnection('sample')
 		var sessionDescription = {
@@ -91,30 +171,18 @@
 			}
 		}
 
-		participant.onstream = function(event){
-			var vidElement = document.getElementById("remoteStream");
-			vidElement.volume = 0.1;
-			vidElement.src = URL.createObjectURL(event.stream);
-
-			//Gain node for context stuff
-			var context = new(window.AudioContext || window.webkitAudioContext)();
-			var sineWave = context.createOscillator(); 
-			sineWave.type = 0; //0 is sine wave
-			sineWave.connect(gainNode);
-			gainNode.connect(context.destination);
-			//Play sine wave
-			sineWave.noteOn(0);
-			gainNode.gain.value = 0.7;
-		}
-
 		participant.body = document.getElementById("videos");
+
+		document.getElementById("openNewSessionButton").onclick = function(){
+			document.getElementById("best-results").style.visibility = "hidden";
+			document.getElementById("openNewSessionButton").style.visibility = "hidden";
+			participant.join(sessionDescription);
+		}
 
 		participant.sdpConstraints.mandatory = {
 			OfferToReceiveAudio: true,
-			OfferToReceiveVideo: true 
+			OfferToReceiveVideo: true
 		}
-
-		participant.join(sessionDescription);
 
 	</script>
 
