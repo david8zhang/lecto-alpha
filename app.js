@@ -12,7 +12,7 @@ var server = require('http').createServer(app).listen(port);
 console.log("server listening on 5400")
 
 //Initialize Socket.io
-var io = require('socket.io')(server)
+var io = require('socket.io')(server, {'transports': ['websocket', 'polling']});
 
 //Other middleware needed to configure passport
 var bodyParser = require('body-parser');

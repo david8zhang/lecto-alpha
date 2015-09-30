@@ -135,7 +135,7 @@
 		var username = sessID.toString().substring(sessID.indexOf(" ") + 1);
 
 		//Socket.io for live text chatting
-		var socket = io.connect(window.location.hostname);
+		var socket = io.connect(window.location.hostname, {'transports': ['websocket', 'polling']});
 		socket.on('connect', function(data){
 			//get the username of the current host
 			socket.emit('adduser', [username, sessID]);

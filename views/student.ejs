@@ -134,7 +134,7 @@
 	</div>
 	<script>
 		//Socket.io for live chatting
-		var socket = io.connect(window.location.hostname);
+		var socket = io.connect(window.location.hostname, {'transports': ['websocket', 'polling']});
 		var sessID = document.getElementById("keyholder").innerHTML;
 		var username = prompt("What's your name?");
 			socket.on('connect', function(data){
