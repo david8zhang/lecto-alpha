@@ -134,7 +134,7 @@
 	</div>
 	<script>
 		//Socket.io for live chatting
-		var socket = io.connect();
+		var socket = io.connect("http://arcane-thicket-5576.herokuapp.com/");
 		var sessID = document.getElementById("keyholder").innerHTML;
 		var username = prompt("What's your name?");
 			socket.on('connect', function(data){
