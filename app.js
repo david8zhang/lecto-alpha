@@ -11,7 +11,8 @@ var server = require('http').createServer(app).listen(5400);
 console.log("server listening on 5400")
 
 //Initialize Socket.io
-var io = require('socket.io')(server);
+var io = require('socket.io')(server)
+
 //Other middleware needed to configure passport
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -325,8 +326,6 @@ app.post('/newsession', function(req, res){
 //Usersnames which are currently connected to the chat
 var usernames = {};
 var rooms = [];
-//Configure socket.io for heroku
-
 // Socket.io connection for live text chat
 io.sockets.on('connection', function(socket){
 		//Joining rooms
@@ -546,7 +545,7 @@ function parseList(list){
 
 
 //Load external assets for front-end
-app.use(express.static(__dirname + '/public/socket.io'));
+app.use(express.static(__dirname + '/public'));
 
 //Load external js
 app.use(express.static(__dirname + '/js'));
