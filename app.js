@@ -12,11 +12,10 @@ var server = require('http').createServer(app).listen(port);
 console.log("server listening on 5400")
 
 //Initialize Socket.io
-var io = require('socket.io')(server)
-io.configure(function () {
-	io.set("transports", ["xhr-polling"]);
-	io.set("polling duration", 10);
-});
+var io = require('socket.io')(server, {
+	"transports": "xhr-polling",
+	"polling duration": 10
+})
 
 
 //Other middleware needed to configure passport
