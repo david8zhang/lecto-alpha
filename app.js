@@ -329,8 +329,6 @@ var usernames = {};
 var rooms = [];
 // Socket.io connection for live text chat
 io.sockets.on('connection', function(socket){
-		io.set("transports", ["xhr-polling"]);
-		io.set("polling duration", 10);
 		//Joining rooms
 		socket.on('adduser', function(sessionDesc){
 			console.log(sessionDesc);
