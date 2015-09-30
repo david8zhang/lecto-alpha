@@ -7,7 +7,8 @@ var express = require('express');
 var flash = require('connect-flash');
 var app = express();
 // var ExpressPeerServer = require('peer').ExpressPeerServer;
-var server = require('http').createServer(app).listen(5400);
+var port = process.env.PORT || 5400;
+var server = require('http').createServer(app).listen(port);
 console.log("server listening on 5400")
 
 //Initialize Socket.io
