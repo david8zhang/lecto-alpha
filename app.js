@@ -6,12 +6,18 @@ var hash;
 var express = require('express');
 var flash = require('connect-flash');
 var app = express();
+var port = process.env.PORT || 5400;
 // var ExpressPeerServer = require('peer').ExpressPeerServer;
-var server = require('http').createServer(app).listen(5400);
+var server = require('http').createServer(app).listen(port);
 console.log("server listening on 5400")
 
 //Initialize Socket.io
 var io = require('socket.io')(server)
+io.configure(function () {
+	io.set("transports", ["xhr-polling"]);
+	io.set("polling duration", 10);
+});
+
 
 //Other middleware needed to configure passport
 var bodyParser = require('body-parser');
@@ -326,8 +332,11 @@ app.post('/newsession', function(req, res){
 //Usersnames which are currently connected to the chat
 var usernames = {};
 var rooms = [];
+//Configure socket.io for heroku
+
 // Socket.io connection for live text chat
 io.sockets.on('connection', function(socket){
+	socket = new io.Socket();
 		//Joining rooms
 		socket.on('adduser', function(sessionDesc){
 			console.log(sessionDesc);
@@ -545,7 +554,7 @@ function parseList(list){
 
 
 //Load external assets for front-end
-app.use(express.static(__dirname + '/public'));
+app.use(express.static(__dirname + '/public/socket.io'));
 
 //Load external js
 app.use(express.static(__dirname + '/js'));
