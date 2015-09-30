@@ -6,7 +6,7 @@ var hash;
 var express = require('express');
 var flash = require('connect-flash');
 var app = express();
-var port = 5400;
+var port = process.env.PORT || 5400;
 // var ExpressPeerServer = require('peer').ExpressPeerServer;
 var server = require('http').createServer(app).listen(port);
 console.log("server listening on 5400")
