@@ -151,7 +151,7 @@
             // connection.send([file1, file2, file3])
             // you can share multiple files, strings or data objects using "send" method!
             if (data instanceof Array && !isNull(data[0].size) && !isNull(data[0].type)) {
-                // this mechanism can cause failure for subsequent packets/data 
+                // this mechanism can cause failure for subsequent packets/data
                 // on Firefox especially; and on chrome as well!
                 // todo: need to use setTimeout instead.
                 for (var i = 0; i < data.length; i++) {
@@ -551,7 +551,7 @@
                             });
                         }
 
-                        // it seems that chrome 35+ throws "DevicesNotFoundError" exception 
+                        // it seems that chrome 35+ throws "DevicesNotFoundError" exception
                         // when any of the requested media is either denied or absent
                         if (e.name && (e.name == 'PermissionDeniedError' || e.name == 'DevicesNotFoundError')) {
                             var mediaStreamError = 'Either: ';
@@ -574,7 +574,7 @@
                             connection.onMediaError(mediaStreamError);
 
                             if (isChrome && (session.audio || session.video)) {
-                                // todo: this snippet fails if user has two or more 
+                                // todo: this snippet fails if user has two or more
                                 // microphone/webcam attached.
                                 DetectRTC.load(function() {
                                     // it is possible to check presence of the microphone before using it!
@@ -1050,7 +1050,7 @@
             if (!session.extra) session.extra = {};
 
             // todo: make sure this works as expected.
-            // i.e. "onNewSession" should be fired only for 
+            // i.e. "onNewSession" should be fired only for
             // sessionid that is passed over "connect" method.
             if (connection.sessionid && session.sessionid != connection.sessionid) return;
 
@@ -1086,7 +1086,7 @@
             for (var i = 0; i < connection.localStreamids.length; i++) {
                 var streamid = connection.localStreamids[i];
                 if (connection.streams[streamid]) {
-                    // using "sockets" array to keep references of all sockets using 
+                    // using "sockets" array to keep references of all sockets using
                     // this media stream; so we can fire "onStreamEndedHandler" among all users.
                     connection.streams[streamid].sockets.push(socket);
                 }
@@ -1834,7 +1834,7 @@
                 // 2nd: must not renegotiate same media multiple times
                 // 3rd: todo: make sure that target-user has no such "renegotiated" media.
                 if (_config.userinfo.browser == 'chrome' && !_config.renegotiatedOnce) {
-                    // this code snippet is added to make sure that "previously-renegotiated" streams are also 
+                    // this code snippet is added to make sure that "previously-renegotiated" streams are also
                     // renegotiated to this new user
                     for (var rSession in connection.renegotiatedSessions) {
                         _config.renegotiatedOnce = true;
@@ -3582,7 +3582,7 @@
         if (root.type == 'remote') return;
 
         // According to issue #135, onmute/onumute must be fired for self
-        // "fakeObject" is used because we need to keep session for renegotiated streams; 
+        // "fakeObject" is used because we need to keep session for renegotiated streams;
         // and MUST pass exact session over onStreamEndedHandler/onmute/onhold/etc. events.
         var fakeObject = merge({}, root);
         fakeObject.session = session;
@@ -3860,7 +3860,7 @@
         // todo: need to verify all possible situations
         log('invoked getUserMedia with constraints:', toStr(hints));
 
-        // easy way to match 
+        // easy way to match
         var idInstance = JSON.stringify(hints);
 
         function streaming(stream, returnBack, streamid) {
@@ -4990,7 +4990,7 @@
         // www.RTCMultiConnection.org/docs/dontCaptureUserMedia/
         connection.dontCaptureUserMedia = false;
 
-        // this feature added to keep users privacy and 
+        // this feature added to keep users privacy and
         // make sure HTTPs pages NEVER auto capture users media
         // isChrome && location.protocol == 'https:'
         connection.preventSSLAutoAllowed = false;
