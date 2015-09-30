@@ -12,8 +12,6 @@ console.log("server listening on 5400")
 
 //Initialize Socket.io
 var io = require('socket.io')(server);
-
-
 //Other middleware needed to configure passport
 var bodyParser = require('body-parser');
 var cookieParser = require('cookie-parser');
@@ -331,8 +329,6 @@ var rooms = [];
 
 // Socket.io connection for live text chat
 io.sockets.on('connection', function(socket){
-	io.set("transports", ["xhr-polling"]);
-  io.set("polling duration", 10);
 		//Joining rooms
 		socket.on('adduser', function(sessionDesc){
 			console.log(sessionDesc);
