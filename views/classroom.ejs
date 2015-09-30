@@ -78,7 +78,7 @@
 		<script type="text/javascript" src="/adapter.js"></script>
 		<script src="/latest.js"></script>
 		<script src="/jquery.min.js"></script>
-		<script src="https://arcane-thicket-5576.herokuapp.com/socket.io/socket.io.js"></script>
+		<script src="/socket.io/socket.io.js"></script>
 
 		<meta name="keywords" content="JavaScript, WebRTC" />
 		<meta name="description" content="WebRTC codelab" />
@@ -135,7 +135,7 @@
 		var username = sessID.toString().substring(sessID.indexOf(" ") + 1);
 
 		//Socket.io for live text chatting
-		var socket = io.connect("http://arcane-thicket-5576.herokuapp.com/");
+		var socket = io.connect(window.location.hostname);
 		socket.on('connect', function(data){
 			//get the username of the current host
 			socket.emit('adduser', [username, sessID]);
