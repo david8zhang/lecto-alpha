@@ -45,6 +45,9 @@
 		.hidden{
 			visibility:hidden;
 		}
+		.visible{
+			visibility: visible;
+		}
 		.remoteStyle {
 			margin:5px;
 			border: 0 solid #333;
@@ -53,7 +56,10 @@
 			border-left: 15px solid #333;
 			border-right: 15px solid #333;
 		}
-
+		.alert-btn {
+			background-color: #ae0001;
+			color: white;
+		}
 		li{
 			margin-top: 10px;
 		}
@@ -119,7 +125,22 @@
 					<h3><%=subject%></h3>
 				</div>
 				<div class="panel-body">
-					<p>The price for video/premium on this lecture is $<%=price%></p>
+					<p id="info">The price for video/premium on this lecture is $<%=price%></p>
+					<form id="flag-form" action='/flag' method='post' class="hidden">
+						<label for="reason">Reason for Flagging:</label>
+						<input type="text" class="hidden" name="name">
+						<br>
+						<select id="school" class="box" name ="reason" maxlength="194">
+							<option value="Select">Select a Reason</option>
+							<option value="Inaccurate Info">Inaccurate Info</option>
+							<option value="Sexual Content">Sexual Content</option>
+							<option value="Drugs">Drug Content</option>
+						</select>
+						<br>
+						<br>
+						<input type="submit" class="btn alert-btn" value="Flag"/>
+					</form>
+					<a id="flag-btn" onclick="onFlag()" class="btn alert-btn" role="button">Flag Inappropriate</a>
 				</div>
 			</div>
 		</div>
@@ -137,10 +158,9 @@
 		var socket = io.connect(window.location.hostname, {'transports': ['websocket', 'polling']});
 		var sessID = document.getElementById("keyholder").innerHTML;
 		var username = prompt("What's your name?");
-			socket.on('connect', function(data){
-				socket.emit('adduser', [username, sessID]);
-			}
-		)
+		socket.on('connect', function(data){
+			socket.emit('adduser', [username, sessID]);
+		});
 
 		var color = getRandomColor();
 
@@ -193,7 +213,14 @@
 	        color += letters[Math.floor(Math.random() * 16)];
 	    }
 	    return color;
-	}
+		}
+
+		function onFlag(){
+			//Show the flagging form
+			var info = document.getElementById("info").className = "hidden";
+			var button = document.getElementById("flag-btn").className = "hidden";
+			var form = document.getElementById("flag-form").className = "visible";
+		}
 
 	</script>
 

@@ -3,7 +3,7 @@
 		.body{
 			background-color:#B6C5D5;
 		}
-		
+
 		li{
 			margin-top: 10px;
 		}
@@ -25,7 +25,7 @@
 			height:75%%;
 			width:100%;
 		}
-		
+
 		.hidden{
 			visibility:hidden;
 		}
@@ -38,8 +38,8 @@
 	</style>
 	<head>
 		<!-- Boostrap components -->
-        <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>	
+    <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
 		<nav class="navbar navbar-default navbar-fixed-top">
 		  <div class="container">
@@ -50,7 +50,7 @@
 			</div>
 		</nav>
 	</head>
-	
+
 	<body class="body">
 		<form class="hidden" id="someform" action="/newlect" method='post'>
 			<input type="text" id="sessionID" name="sessionID">
@@ -62,9 +62,9 @@
 		<div class="container">
 			<h1 class="text-center">Video Sections</h1>
 			<div class="row">
-				<% for(var i = 0; i < secList.length; i ++){ %> 
+				<% for(var i = 0; i < secList.length; i ++){ %>
 					<div class="col-md-2 text-center">
-						<a href="#" class="idkey" onclick="sendLink(event)"><%=nameList[i]%></a> 
+						<a href="#" class="idkey" onclick="sendLink(event)"><%=nameList[i]%></a>
 						<a href="#" class="idtag"><%=secList[i]%></a>
 					</div>
 				<%	} %>
@@ -74,16 +74,9 @@
 
 
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-	<script src="/socket.io/socket.io.js"></script>  
+	<script src="/socket.io/socket.io.js"></script>
 
 	<script>
-		//# IDEA NUMBER ONE FOR STYLING INDIVIDUAL ARCHIVE ELEMENTS
-		//1. Set the a tag as some common css class
-		//2. Grab all the a tags using getElementsByClassName 
-		//3. Iterate thhrough all elements assigning each a unique div id number
-		//4. Append the div id to the unique innerHTML and store it into an array
-		//5. Whenever an element is clicked, check its div id and compare against this array
-		//6. Get corresponding link and send it to the server
 		var vids = document.getElementsByClassName("idtag");
 		var keys = document.getElementsByClassName("idkey");
 		var vid_urls = [];
@@ -91,7 +84,7 @@
 			keys[i].id = i + 1;
 			vids[i].id = i;
 			vid_urls.push(vids[i].innerHTML);
-		}	
+		}
 
 		function sendLink(event){
 			var input = document.getElementById("sessionID");
@@ -99,11 +92,11 @@
 			//Debug print statements
 			console.log("the id is " + val);
 			console.log("The link array is " + vid_urls);
-			
+
 			input.value = vid_urls[val - 1];
 			var someform = document.getElementById("someform");
 			someform.submit();
 		}
-	</script> 
+	</script>
 
 </html>

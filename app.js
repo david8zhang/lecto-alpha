@@ -138,7 +138,9 @@ app.get('/classes', function(req, res){
 		var list = [];
 		jsonString = JSON.parse(JSON.stringify(sessions))
 		for(i = 0; i < jsonString["Items"].length; i++){
-			list.push(jsonString["Items"][i].title + " " + jsonString["Items"][i].name)
+			if(jsonString["Items"][i].flagcount < 4){
+				list.push(jsonString["Items"][i].title + " " + jsonString["Items"][i].name);
+			}
 		}
 		console.log(list);
 		res.render('classes', {
@@ -305,6 +307,44 @@ app.post('/goodupload', function(req, res){
 	res.render('goodupload')
 });
 
+//Function that handles flagging on the server side
+app.post('/flag', function(req, res){
+	getSession(req.user.name, function(result){
+		var flagcount = result[4];
+		flagcount += 1;
+		setFlag(req.user.name, flagcount);
+
+		//Send email to the administrator
+		var transporter = nodemailer.createTransport(smtpTransport({
+			service: 'gmail',
+			auth: {
+				user: 'lecto.info@gmail.com',
+				pass: 'da51d2eda2'
+			}
+		}));
+
+		//Send out the mail for account activation
+		var mailOptions = {
+			from: 'lecto.info@gmail.com',
+			to: 'lecto.info@gmail.com',
+			subject: 'Session Reported!',
+			text: 'A session hosted by ' + req.user.name + ' was flagged for the following reason: \n\n' + //Maybe make this link to an admin dashboard
+			req.body.reason + '\n\n' +
+			'click the link below to block the session' + '\n\n' +
+			'http://' + req.headers.host + '/' + '\n\n' +
+			'Thanks!'
+		};
+
+		transporter.sendMail(mailOptions, function(error, info){
+			if(error){
+				console.log(error)
+			} else {
+				console.log("Successfully sent email to admin!");
+			}
+		})
+	})
+	res.render('flagsuccess');
+})
 
 //Post the new session information
 app.post('/newsession', function(req, res){
@@ -378,8 +418,6 @@ function register(username, password, email){
 
 	//npm install bcrypt in order for this to work
 	//Obtains secure random numbers
-
-
 	var salt = bcrypt.genSaltSync(10);
 	hash = bcrypt.hashSync(password, salt);
 
@@ -401,7 +439,7 @@ function newSession(name, title, subject, price){
 	AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
 	var params = {};
 	params.TableName = 'teacher-sessions';
-	params.Item = {name: name, title: title, subject: subject, price: price};
+	params.Item = {name: name, title: title, subject: subject, price: price, flagcount: 0};
 	docClient.putItem(params, function(err, data){
 		if(err){
 			console.log(err, err.stack)
@@ -409,7 +447,6 @@ function newSession(name, title, subject, price){
 			console.log("Session successfully created!");
 		}
 	})
-
 }
 
 //Retrieves session information
@@ -425,7 +462,7 @@ function getSession(username, callback){
 			jsonString = JSON.parse(JSON.stringify(result))
 			console.log(jsonString)
 			var sessionid = jsonString["Item"].title + " " + jsonString["Item"].name;
-			callback([sessionid, jsonString["Item"].subject, jsonString["Item"].price, jsonString["Item"].title]);
+			callback([sessionid, jsonString["Item"].subject, jsonString["Item"].price, jsonString["Item"].title, jsonString["Item"].flagcount]);
 		}
 	})
 }
@@ -508,6 +545,26 @@ function activate(user, token){
 			console.log("Account activated!")
 		}
 	})
+}
+
+function setFlag(username, flagcount){
+	var params = {};
+	params.TableName = "teacher-sessions";
+	params.Key = {name: username};
+
+	//Incrememnt the flagcount
+	params.UpdateExpression = "set #flagcount = :flagcount";
+	params.ExpressionAttributeNames = {"#flagcount": "flagcount"};
+	params.ExpressionAttributeValues = {":flagcount": flagcount};
+
+	docClient.updateItem(params, function(err, data){
+		if(err){
+			console.log(err, err.stack)
+		} else {
+			console.log("Flag Count updated!")
+		}
+	})
+
 }
 
 //Lists all the files

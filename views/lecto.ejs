@@ -18,7 +18,7 @@
 			border: solid 1px #eeeeee;
 			text-align: center;
 		}
-		
+
 		.container {
 			width:65%;
 		}
@@ -50,15 +50,15 @@
 		</style>
 	<head>
 		<!-- Boostrap components -->
-        <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="/animate.css">
+    <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/animate.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 		<script src="/aws-sdk.min.js"></script>
 		<script src="/jquery.min.js"></script>
 		<script src="/amazon-cognito.min.js"></script>
 		<script src="/jquery.nicefileinput.min.js"></script>
 
-		
+
 		<nav class="navbar navbar-default navbar-fixed-top">
 		  <div class="container">
 
@@ -90,12 +90,12 @@
 							<input type="text" id="class" name="subject" placeholder="Enter a class">
 							<br>
 							<br>
-							<label for="school">School: </label> 
+							<label for="school">School: </label>
 							<br>
-							<select id="school" class="box" name ="schools" maxlength="194"> 
+							<select id="school" class="box" name ="schools" maxlength="194">
 								<option value="Select">Select a School</option>
 								<option value="UC Berkeley">UC Berkeley</option>
-							</select> 
+							</select>
 							<br>
 							<br>
 							<input id="uploadVid" type="file" name="file" />
@@ -112,15 +112,15 @@
 
 						<progress id="fileProgress" max="100" class="hidden">
 						</progress>
-						
+
 						<script type="text/javascript">
-							var filename = null; 
+							var filename = null;
 							//Makes the file input tag look a lot nicer
 							$(document).ready(function(){
 								$("input[type=file]").nicefileinput();
 							});
 
-							//Set the cognito credentials and do the aws stuff 
+							//Set the cognito credentials and do the aws stuff
 							AWS.config.region= 'us-east-1'
 							AWS.config.credentials = new AWS.CognitoIdentityCredentials({
 								IdentityPoolId: 'us-east-1:25457026-c042-4aa1-b844-be70570b71ec',
@@ -170,26 +170,26 @@
 									request.on('httpUploadProgress', function(progress){
 
 										//Instantiate the loading bar
-										var percent = (progress.loaded/progress.total) * 100; 
+										var percent = (progress.loaded/progress.total) * 100;
 										var progDiv = document.getElementById("fileProgress");
 										progDiv.className = "visible";
-										progDiv.value = percent; 
+										progDiv.value = percent;
 										console.log(progress.loaded + " of " + progress.total + " bytes");
-										
+
 										if(percent == 100){
 											//Delay them so that the sessions can finish uploading to s3 first
 											var millisecondsToWait = 2000;
 											setTimeout(function(){
 												askpdf();
 											}, millisecondsToWait);
-			
-										}				
+
+										}
 									})
 								} else {
 									console.log('nothing to upload');
 								}
 							})
-						
+
 						//Follow up pdf questions
 						function askpdf(){
 							document.getElementById("lectos").className = "hidden";
@@ -227,20 +227,20 @@
 									request.on('httpUploadProgress', function(progress){
 
 										//Instantiate the loading bar
-										var percent = (progress.loaded/progress.total) * 100; 
+										var percent = (progress.loaded/progress.total) * 100;
 										var progDiv = document.getElementById("pdfProgress");
 										progDiv.className = "visible";
-										progDiv.value = percent; 
+										progDiv.value = percent;
 										console.log(progress.loaded + " of " + progress.total + " bytes");
-										
+
 										if(percent == 100){
 											//Delay them so that the sessions can finish uploading to s3 first
 											var millisecondsToWait = 2000;
 											setTimeout(function(){
 												setvid();
 											}, millisecondsToWait);
-			
-										}				
+
+										}
 									})
 								} else {
 									console.log('nothing to upload');
@@ -249,8 +249,8 @@
 						}
 
 						function setvid(){
-							//Submit the form 
-							document.getElementById("progform").submit(); 
+							//Submit the form
+							document.getElementById("progform").submit();
 						}
 						</script>
 
