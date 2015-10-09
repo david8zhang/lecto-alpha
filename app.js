@@ -68,10 +68,7 @@ passport.use(new passportLocal.Strategy(function(username, password, done){
 	var queryParams = {};
 	queryParams.TableName = 'lecto-teachers';
 	queryParams.KeyConditions = [docClient.Condition('username', 'EQ', username)];
-
-
-
-	/*queryParams.QueryFilter = docClient.Condition('password', 'EQ', docClient.getItem();*/ //If docClient.Condition checks for equality this
+ 	//If docClient.Condition checks for equality this
 	docClient.query(queryParams, function(err, result){                                        //Otherwise we can use bcrypt.compareSync(__), which
 		if(err){                                                                               //returns a boolean value based on equality
 			done(new Error('Oh Shit!'));
@@ -162,7 +159,7 @@ app.get('/archives', function(req, res){
 
 //get the registration page
 app.get('/register', function(req, res){
-	res.render('register')
+	res.render('register', {message: req.flash('error')})
 });
 
 //Get the dashboard
@@ -176,7 +173,8 @@ app.get('/dashboard', function(req, res){
 //Get the new session page
 app.get('/session', function(req, res){
 	res.render('session',{
-		username: req.user.name
+		username: req.user.name,
+		message: req.flash('error')
 	});
 })
 
@@ -248,38 +246,45 @@ app.post('/register', function(req, res){
 	username = req.body.name;
 	password = req.body.pass;
 	email = req.body.email;
+	var accExists = false;
 
-	generateAuthToken(function(err, token){
-		//Create an smtp transport
-		var transporter = nodemailer.createTransport(smtpTransport({
-			service: 'gmail',
-			auth: {
-				user: 'lecto.info@gmail.com',
-				pass: 'da51d2eda2'
-			}
-		}));
+	checkUserExists(username, function(accExists){
+		if(accExists){
+			req.flash('error', 'Sorry! That username already exists!')
+			res.redirect('/register')
+		} else {
+			generateAuthToken(function(err, token){
+				//Create an smtp transport
+				var transporter = nodemailer.createTransport(smtpTransport({
+					service: 'gmail',
+					auth: {
+						user: 'lecto.info@gmail.com',
+						pass: 'da51d2eda2'
+					}
+				}));
 
-		//Send out the mail for account activation
-		var mailOptions = {
-			from: 'lecto.info@gmail.com',
-			to: email,
-			subject: 'Activate your account',
-			text: 'Please click on the link below to activate your account: \n\n' +
-			'http://' + req.headers.host + '/activate/' + token + '&' + username + '\n\n' +
-			'If you did not create an account, please ignore this email'
-		};
+				//Send out the mail for account activation
+				var mailOptions = {
+					from: 'lecto.info@gmail.com',
+					to: email,
+					subject: 'Activate your account',
+					text: 'Please click on the link below to activate your account: \n\n' +
+					'http://' + req.headers.host + '/activate/' + token + '&' + username + '\n\n' +
+					'If you did not create an account, please ignore this email'
+				};
 
-		transporter.sendMail(mailOptions, function(error, info){
-			if(error){
-				console.log(error)
-			} else {
-					//Registering user
-				register(username, password, email)
-			}
-		})
+				transporter.sendMail(mailOptions, function(error, info){
+					if(error){
+						console.log(error)
+					} else {
+							//Registering user
+						register(username, password, email)
+					}
+				})
+			})
+			res.redirect('/success')
+		}
 	})
-
-	res.redirect('/success')
 });
 
 //redirect to the embedded live stream
@@ -352,16 +357,15 @@ app.post('/newsession', function(req, res){
 	var subject = req.body.subject;
 	var price = req.body.price;
 	var title = req.body.name;
-	newSession(name, title, subject, price);
 
+	newSession(name, title, subject, price);
 	//Delay them so that they can't just spam sessions
 	var millisecondsToWait = 5000;
 	setTimeout(function(){
 		res.redirect('/classroom')
 	}, millisecondsToWait)
+
 });
-
-
 
 /*********************************SOCKET IO*************************************/
 //Usersnames which are currently connected to the chat
@@ -434,6 +438,27 @@ function register(username, password, email){
 	})
 }
 
+//Check if the user already exists in the database
+function checkUserExists(username, callback){
+	var queryParams = {};
+	queryParams.TableName = 'lecto-teachers'
+	queryParams.KeyConditions = [docClient.Condition('username', 'EQ', username)];
+	docClient.query(queryParams, function(err, result){
+		if(err){
+			console.log("Unable to check user accounts");
+			console.log(err);
+		} else {
+			jsonString = JSON.parse(JSON.stringify(result))
+			console.log(jsonString);
+			if(jsonString["Count"] != 0){
+				callback(true);
+			} else {
+				callback(false);
+			}
+		}
+	})
+}
+
 //Store the session in a database
 function newSession(name, title, subject, price){
 	AWS.config.update({accessKeyId: AWS_ACCESS_KEY, secretAccessKey: AWS_SECRET_KEY});
@@ -496,7 +521,6 @@ function deleteSession(username){
 		}
 	})
 }
-
 
 //Check if a specific class session exists
 function checkSessionExists(username, callback){
@@ -600,7 +624,6 @@ function parseList(list){
 	return nameStrings;
 
 }
-
 
 //Load external assets for front-end
 app.use(express.static(__dirname + '/public'));

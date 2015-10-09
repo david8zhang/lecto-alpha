@@ -13,6 +13,12 @@
 		li{
 			margin-top: 10px;
 		}
+		.error-handle {
+			color: #DB2929;
+			text-align: center;
+			border-radius: 5px;
+			background-color:#FFCCCC;
+		}
 		.align{
 			margin-left: 28px;
 		}
@@ -20,8 +26,8 @@
 	</style>
 	<head>
 		<!-- Boostrap components -->
-        <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="/animate.css">
+    <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/animate.css">
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
 		<nav class="navbar navbar-default navbar-fixed-top">
@@ -42,6 +48,11 @@
 		<br>
 		<br>
 		<div class="container">
+			<% if (message) { %>
+				<p class="error-handle"><%= message %></p>
+			<% } else { %>
+				<p class="invisible"></p>
+			<% } %>
 			<div class="panel panel-default">
 
 				<div class="panel-heading animated fadeIn">

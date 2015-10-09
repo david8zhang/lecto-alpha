@@ -25,6 +25,13 @@
 			margin-top: 10px;
 		}
 
+		.error-handle {
+			color: #DB2929;
+			text-align: center;
+			border-radius: 5px;
+			background-color:#FFCCCC;
+		}
+
 		.hidden{
 			visibility: hidden;
 		}
@@ -61,6 +68,11 @@
 		<br>
 		<h1 class="animated fadeIn"><b>Start a new Session</b></h1>
 		<div class="jumbotron text-center">
+			<% if (message) { %>
+				<p class="error-handle"><%= message %></p>
+			<% } else { %>
+				<p class="hidden"></p>
+			<% } %>
 			<body align="center">
 				<div>
 					<form action='/newsession' method='post'>
