@@ -76,24 +76,18 @@ passport.use(new passportLocal.Strategy(function(username, password, done){
 		} else {
 			jsonString = JSON.parse(JSON.stringify(result))
 			console.log(jsonString);
-
-			if(bcrypt.compareSync(password,jsonString["Items"][0].password)) //returns True if the password is equal to the hash, otherwise False
-			{
-				 if(jsonString["Count"] != 0){
-					console.log(jsonString["Items"][0].token)
-					//Check if the user has activated through their email
-					if(jsonString["Items"][0].token == "null"){
-						done(null, false, {message: 'Account not activated. Please check your email'})
-					} else {
-						//Checks if there is an authentication token (to indicate that the user has authenticated)
-						done(null, {id: username, name: jsonString["Items"].username});
-
-					}
-				} else{
-					done(null, false, {message: 'Incorrect username or password'})
+			 if(jsonString["Count"] != 0){
+				console.log(jsonString["Items"][0].token)
+				//Check if the user has activated through their email
+				if(jsonString["Items"][0].token == "null"){
+					done(null, false, {message: 'Account not activated. Please check your email'})
+				} else if(bcrypt.compareSync(password,jsonString["Items"][0].password)){
+					//Checks if there is an authentication token (to indicate that the user has authenticated)
+					done(null, {id: username, name: jsonString["Items"].username});
 				}
+			} else{
+				done(null, false, {message: 'Incorrect username or password'})
 			}
-
 		}
 	})
 }));
