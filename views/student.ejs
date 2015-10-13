@@ -60,6 +60,10 @@
 			background-color: #ae0001;
 			color: white;
 		}
+		.feedback-btn{
+			background-color: #00cb00;
+			color: white;
+		}
 		li{
 			margin-top: 10px;
 		}
@@ -101,7 +105,6 @@
 				<a href="/login" class="navbar-brand">Teach</a>
 				<ul class="nav nav-pills">
 					<li role="presentation"><a href="/"><b>Leave Session</b></a></li>
-					<li role="presentation"><a href="#" ><b>Go Premium</b></a></li>
 				</ul>
 			</div>
 		</nav>
@@ -125,7 +128,6 @@
 					<h3><%=subject%></h3>
 				</div>
 				<div class="panel-body">
-					<p id="info">The price for video/premium on this lecture is $<%=price%></p>
 					<form id="flag-form" action='/flag' method='post' class="hidden">
 						<label for="reason">Reason for Flagging:</label>
 						<input type="text" class="hidden" name="name">
@@ -141,6 +143,8 @@
 						<input type="submit" class="btn alert-btn" value="Flag"/>
 					</form>
 					<a id="flag-btn" onclick="onFlag()" class="btn alert-btn" role="button">Flag Inappropriate</a>
+					<a id="feedback" href="http://goo.gl/forms/KpED1wg419" class="btn feedback-btn" role="button">Leave Feedback!</a>
+
 				</div>
 			</div>
 		</div>
