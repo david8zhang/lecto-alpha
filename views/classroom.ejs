@@ -191,7 +191,10 @@
 			document.getElementById("openNewSessionButton").style.visibility = "hidden";
 		}
 
-		window.onbeforeunload = redirect;
+		initiator.leaveOnPageUnload = false;
+		window.addEventListener("beforeunload", function(e){
+			redirect();
+		});
 
 		function redirect(){
 			var form = document.getElementById("postform");

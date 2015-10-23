@@ -349,7 +349,7 @@ app.post('/flag', function(req, res){
 app.post('/newsession', function(req, res){
 	var name = req.user.name;
 	var subject = req.body.subject;
-	var price = req.body.price;
+	var price = 0;
 	var title = req.body.name;
 
 	newSession(name, title, subject, price);
