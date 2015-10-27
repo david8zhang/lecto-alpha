@@ -84,6 +84,8 @@ passport.use(new passportLocal.Strategy(function(username, password, done){
 				} else if(bcrypt.compareSync(password,jsonString["Items"][0].password)){
 					//Checks if there is an authentication token (to indicate that the user has authenticated)
 					done(null, {id: username, name: jsonString["Items"].username});
+				} else {
+					done(null, false, {message: 'Incorrect username or password'})
 				}
 			} else{
 				done(null, false, {message: 'Incorrect username or password'})
