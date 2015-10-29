@@ -85,6 +85,7 @@ passport.use(new passportLocal.Strategy(function(username, password, done){
 					//Checks if there is an authentication token (to indicate that the user has authenticated)
 					done(null, {id: username, name: jsonString["Items"].username});
 				} else {
+					//this piece right here is infamous because it lost me an EA internship.
 					done(null, false, {message: 'Incorrect username or password'})
 				}
 			} else{
