@@ -134,6 +134,7 @@
 	</div>
 
 	<script>
+		var streamid;
 		var sessID = document.getElementById("keyholder").innerHTML;
 		var username = sessID.toString().substring(sessID.indexOf(" ") + 1);
 
@@ -190,6 +191,11 @@
 			IceRestart: true
 		}
 
+		initiator.onstream = function(e){
+			streamid = e.streamid;
+			document.getElementById("videos").append;
+		}
+
 		initiator.body = document.getElementById("videos");
 
 		document.getElementById("openNewSessionButton").onclick = function(){
@@ -213,18 +219,15 @@
 		var recorder = document.getElementById('record');
 		var stopRecording = document.getElementById('stoprecord');
 		recorder.onclick = function(){
-			startRecording({
+			initiator.streams[streamid].startRecording({
 				audio: true,
-				video: true
-			});
-			recordRTC.className = "hidden";
+				video: true,
+			})
 		}
 
-		// stopRecording.onclick = function(){
-		// 	initiator.streams['stream-id'].stopRecording(function(audioBlob, videoBlob){
-		// 		console.log('good stuff');
-		// 	}, {audio: true, video: true});
-		// }
+		initiator.streams[streamid].stopRecording(function (audioBlob, videoBlob) {
+			console.log(streamid);
+		}, {audio:true, video:true} );
 
 
 
