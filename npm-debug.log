@@ -18,7 +18,7 @@
 9 verbose stack     at maybeClose (child_process.js:1015:16)
 9 verbose stack     at Process.ChildProcess._handle.onexit (child_process.js:1087:5)
 10 verbose pkgid lecto@1.0.0
-11 verbose cwd c:\Users\david_000\Desktop\lecto
+11 verbose cwd c:\Users\david_000\Desktop\Lecto
 12 error Windows_NT 6.3.9600
 13 error argv "c:\\Program Files\\nodejs\\node.exe" "c:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "start"
 14 error node v0.12.4
