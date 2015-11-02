@@ -116,7 +116,9 @@
 		<br>
 		<div class="container">
 			<div id='videos'></div>
-				<h2 id="best-results">For best results, use headphones!</h2>
+				<h2 id="best-results">Please plug in headphones</h2>
+				<h3 id="warning-results"><em>It is not recommended that you play the video without headphones</em></h3>
+				<br>
 				<a id="openNewSessionButton" class="btn btn-primary btn-lg" role="button">OK!</a>
 		</div>
 		<br>
@@ -131,7 +133,6 @@
 					<form id="flag-form" action='/flag' method='post' class="hidden">
 						<label for="reason">Reason for Flagging:</label>
 						<input type="text" class="hidden" name="name">
-						<br>
 						<select id="school" class="box" name ="reason" maxlength="194">
 							<option value="Select">Select a Reason</option>
 							<option value="Inaccurate Info">Inaccurate Info</option>
@@ -142,7 +143,7 @@
 						<br>
 						<input type="submit" class="btn alert-btn" value="Flag"/>
 					</form>
-					<a id="flag-btn" onclick="onFlag()" class="btn alert-btn" role="button">Flag Inappropriate</a>
+					<!-- <a id="flag-btn" onclick="onFlag()" class="btn alert-btn" role="button">Flag Inappropriate</a> -->
 					<a id="feedback" href="http://goo.gl/forms/KpED1wg419" class="btn feedback-btn" role="button">Leave Feedback!</a>
 
 				</div>
@@ -158,6 +159,7 @@
 			<div class="new-message" id="msg" overflow="hidden" contenteditable="true"></div>
 	</div>
 	<script>
+
 		//Socket.io for live chatting
 		var socket = io.connect(window.location.hostname, {'transports': ['websocket', 'polling']});
 		var sessID = document.getElementById("keyholder").innerHTML;
@@ -201,14 +203,18 @@
 
 		document.getElementById("openNewSessionButton").onclick = function(){
 			document.getElementById("best-results").style.visibility = "hidden";
+			document.getElementById("warning-results").style.visibility = "hidden";
 			document.getElementById("openNewSessionButton").style.visibility = "hidden";
 			participant.join(sessionDescription);
+			var video = $("#videos").children();
+			video[0].volume = 0.2;
 		}
 
 		participant.sdpConstraints.mandatory = {
 			OfferToReceiveAudio: true,
 			OfferToReceiveVideo: true
 		}
+
 
 		function getRandomColor() {
 	    var letters = '0123456789ABCDEF'.split('');
