@@ -96,8 +96,6 @@
 				<a href="#" onclick="redirect()" class="navbar-brand">Teach</a>
 				<ul class="nav nav-pills">
 					<li role="presentation"><a href="#" onclick="redirect()"><b>End Session</b></a></li>
-					<li id="record" role="presentation"><a href="#">Record Session</a></li>
-					<li class="hidden" id="stoprecord" role="presentation"><a href="#">Stop Recording</a></li>
 				</ul>
 			</div>
 		</nav>
@@ -118,9 +116,6 @@
 					<div class="panel-heading">
 						<h1><%=title%></h1>
 						<h3><%=subject%></h3>
-					</div>
-					<div class="panel-body hidden">
-						<p>The price for video/premium on this lecture is $<%=price%></p>
 					</div>
 				</div>
 			</div>
@@ -168,7 +163,7 @@
 		})
 
 		//Set up RTC Multi Connection
-		var initiator = new RTCMultiConnection("sample");
+		var initiator = new RTCMultiConnection(sessID);
 		initiator.session = {
 			audio: true,
 			video: true,
@@ -194,7 +189,7 @@
 		initiator.body = document.getElementById("videos");
 
 		document.getElementById("openNewSessionButton").onclick = function(){
-			initiator.open("sample");
+			initiator.open(sessID);
 			document.getElementById("openNewSessionButton").style.visibility = "hidden";
 		}
 

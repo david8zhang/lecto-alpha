@@ -1,99 +1,110 @@
 <html>
-	<style>
+<style>
+  .body {
+    background-color: #B6C5D5;
+  }
+  
+  input {
+    padding: 10px;
+    border: solid 1px #eeeeee;
+    box-shadow: inset 1px 1px 2px 0 #111111;
+  }
+  
+  li {
+    margin-top: 10px;
+  }
+  
+  .navbar {
+    box-shadow: 0 5px 5px #333;
+  }
+  
+  .error-handle {
+    color: #DB2929;
+    text-align: center;
+    border-radius: 5px;
+    background-color: #FFCCCC;
+  }
+  
+  .invisible {
+    visibility: hidden;
+  }
+  
+  .right {
+    text-align: right;
+  }
+</style>
 
-		.body{
-			background-color:#B6C5D5;
-		}
+<head>
+  <!-- Boostrap components -->
+  <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/animate.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-		input{
-		    padding: 10px;
-			border: solid 1px #eeeeee;
-			box-shadow: inset 1px 1px 2px 0 #111111;
-		}
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <a href="/" class="navbar-brand">Home</a>
+      <ul class="nav nav-pills">
+        <li role="presentation"><a href="/Login"><b>Teach</b></a></li>
+        <li role="presentation"><a href="/category"><b>Learn</b></a></li>
+      </ul>
+    </div>
+  </nav>
+</head>
 
-		li{
-			margin-top: 10px;
-		}
+<body align="center" class="body">
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <div class="container">
+    <% if (message) { %>
+      <p class="error-handle">
+        <%= message %>
+      </p>
+      <% } else { %>
+        <p class="invisible"></p>
+        <% } %>
+          <div class="panel panel-default">
+            <div class="panel-heading animated fadeIn">
+              <h1>Login</h1>
+            </div>
+            <div class="panel-body">
+              <br>
+              <form action='/login' method='post'>
+                <label for="name">Username: </label>
+                <input type="text" id="name" name="username" placeholder="Enter a Username" required>
+                <br>
+                <br>
+                <label for="name">Password: </label>
+                <input type="password" id="pass" name="password" placeholder="Enter a Password" required>
+                <br>
+                <br>
+                <input type="submit" class="btn btn-primary" value="Log in" />
+                <br>
+                <br>
+                <a href="/register">Don't have an account? Register now!</a>
+              </form>
+            </div>
+          </div>
+  </div>
 
-		.navbar {
-			box-shadow: 0 5px 5px #333;
-		}
-		.error-handle {
-			color: #DB2929;
-			text-align: center;
-			border-radius: 5px;
-			background-color:#FFCCCC;
-		}
-		.invisible{
-			visibility: hidden;
-		}
-		.right{
-			text-align: right;
-		}
+  <script>
+    (function(i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-	</style>
-	<head>
-		<!-- Boostrap components -->
-        <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="/animate.css">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-		<nav class="navbar navbar-default navbar-fixed-top">
-			<div class="container">
-				<a href="/" class="navbar-brand">Home</a>
-				<ul class="nav nav-pills">
-					<li role="presentation"><a href="/Login"><b>Teach</b></a></li>
-					<li role="presentation"><a href="/category"><b>Learn</b></a></li>
-				</ul>
-			</div>
-		</nav>
-	</head>
-
-	<body align="center" class="body">
-		<br>
-		<br>
-		<br>
-		<br>
-		<br>
-		<div class="container">
-			<% if (message) { %>
-			 	<p class="error-handle"><%= message %></p>
-			<% } else { %>
-				<p class="invisible"></p>
-			<% } %>
-			<div class="panel panel-default">
-				<div class="panel-heading animated fadeIn">
-					<h1>Login</h1>
-				</div>
-				<div class="panel-body">
-					<br>
-					<form action='/login' method='post'>
-						<label for="name">Username: </label>
-						<input type="text" id="name" name="username" placeholder="Enter a Username" required>
-						<br>
-						<br>
-						<label for="name">Password: </label>
-						<input type="password" id="pass" name="password" placeholder="Enter a Password" required>
-						<br>
-						<br>
-						<input type="submit" class="btn btn-primary" value="Log in"/>
-						<br>
-						<br>
-						<a href="/register">Don't have an account? Register now!</a>
-					</form>
-				</div>
-			</div>
-		</div>
-
-		<script>
-			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-			ga('create', 'UA-68589817-1', 'auto');
-			ga('send', 'pageview');
-		</script>
-	</body>
+    ga('create', 'UA-68589817-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+</body>
 
 </html>

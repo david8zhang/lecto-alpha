@@ -1,92 +1,100 @@
 <html>
-	<style>
-		.title-padding{
-			margin-left: 25px;
-			margin-bottom: -10px;
-		}
-		.big{
-			font-size: 50px;
-		}
+<style>
+  .title-padding {
+    margin-left: 25px;
+    margin-bottom: -10px;
+  }
+  
+  .big {
+    font-size: 50px;
+  }
+  
+  input {
+    padding: 10px;
+    border: solid 1px #eeeeee;
+  }
+  
+  .container {
+    width: 65%;
+  }
+  
+  .body {
+    background-color: #B6C5D5;
+  }
+  
+  li {
+    margin-top: 10px;
+  }
+  
+  .hidden {
+    visibility: hidden;
+  }
+  
+  .navbar {
+    box-shadow: 0 5px 5px #333;
+  }
+</style>
 
-		input{
-		    padding: 10px;
-			border: solid 1px #eeeeee;
-		}
+<head>
+  <!-- Boostrap components -->
+  <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/animate.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-		.container {
-			width:65%;
-		}
+  <nav class="navbar navbar-default navbar-fixed-top">
 
-		.body {
-			background-color:#B6C5D5;
-		}
+    <div class="container">
 
-		li{
-			margin-top: 10px;
-		}
+      <a href="#" class="navbar-brand">Teach</a>
+      <ul class="nav navbar-left">
+        <li role="presentation"><a href="/category"><b>Learn</b></a></li>
+      </ul>
 
-		.hidden{
-			visibility: hidden;
-		}
-
-		.navbar {
-			box-shadow: 0 5px 5px #333;
-		}
-	</style>
-	<head>
-		<!-- Boostrap components -->
-    <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="/animate.css">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-		<nav class="navbar navbar-default navbar-fixed-top">
-
-		  <div class="container">
-
-				<a href="#" class="navbar-brand">Teach</a>
-				<ul class="nav navbar-left">
-					<li role="presentation"><a href="/category"><b>Learn</b></a></li>
-				</ul>
-
-		   		<a href="/logout" class="navbar-text navbar-right">Log Out</a>
-		  		<p class="navbar-text navbar-right">Signed in as <a href="/dashboard" class="navbar-link"><%= username %></a></p>
-		   </div>
-		</nav>
-	</head>
+      <a href="/logout" class="navbar-text navbar-right">Log Out</a>
+      <p class="navbar-text navbar-right">Signed in as
+        <a href="/dashboard" class="navbar-link">
+          <%= username %>
+        </a>
+      </p>
+    </div>
+  </nav>
+</head>
 
 
-	<body class="body">
-		<br>
-		<br>
-		<br>
-		<h1 class="animated fadeIn"><b>Start a new Session</b></h1>
-		<div class="jumbotron text-center">
-			<body align="center">
-				<div>
-					<form action='/newsession' method='post'>
-						<label for="name">Session Name: </label>
-						<br>
-						<input type="text" id="name" name="name" placeholder="Enter a username">
-						<br>
-						<br>
-						<label for="name">Class: </label>
-						<br>
-						<input type="text" id="pass" name="subject" placeholder="Enter a class">
-						<br>
-						<br>
-						<label for="name">Premium Price: </label>
-						<br>
-						<input type="number" id="pass" step=".05" name="price" placeholder="Enter a price">
-						<br>
-						<br>
-						<input type="checkbox" name="terms" id="terms">
-						<a href="#">I accept the Terms and Conditions</a>
-						<br>
-						<br>
-						<input type="submit" class="btn btn-primary" value="Create Session"/>
-					</form>
-				</div>
-			</body>
-		</div>
-	</body>
+<body class="body">
+  <br>
+  <br>
+  <br>
+  <h1 class="animated fadeIn"><b>Start a new Session</b></h1>
+  <div class="jumbotron text-center">
+
+    <body align="center">
+      <div>
+        <form action='/newsession' method='post'>
+          <label for="name">Session Name: </label>
+          <br>
+          <input type="text" id="name" name="name" placeholder="Enter a username">
+          <br>
+          <br>
+          <label for="name">Class: </label>
+          <br>
+          <input type="text" id="pass" name="subject" placeholder="Enter a class">
+          <br>
+          <br>
+          <label for="name">Premium Price: </label>
+          <br>
+          <input type="number" id="pass" step=".05" name="price" placeholder="Enter a price">
+          <br>
+          <br>
+          <input type="checkbox" name="terms" id="terms">
+          <a href="#">I accept the Terms and Conditions</a>
+          <br>
+          <br>
+          <input type="submit" class="btn btn-primary" value="Create Session" />
+        </form>
+      </div>
+    </body>
+  </div>
+</body>
+
 </html>

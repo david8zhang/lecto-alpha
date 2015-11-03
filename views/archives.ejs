@@ -1,110 +1,124 @@
 <html>
-	<style>
-		.body{
-			background-color:#B6C5D5;
-		}
+<style>
+  .body {
+    background-color: #B6C5D5;
+  }
+  
+  li {
+    margin-top: 10px;
+  }
+  
+  .navbar {
+    box-shadow: 0 5px 5px #333;
+  }
+  
+  .col-md-2 {
+    background-color: white;
+    padding: 10px;
+    margin: 15px 5px 10px 10px;
+    height: 240px;
+    box-shadow: 0 3px 1px #666;
+    border-radius: 3px;
+  }
+  
+  img {
+    height: 75%%;
+    width: 100%;
+  }
+  
+  .hidden {
+    visibility: hidden;
+  }
+  
+  h1 {
+    visibility: hidden;
+  }
+  
+  .idtag {
+    visibility: hidden;
+  }
+</style>
 
-		li{
-			margin-top: 10px;
-		}
+<head>
+  <!-- Boostrap components -->
+  <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-		.navbar {
-			box-shadow: 0 5px 5px #333;
-		}
+  <nav class="navbar navbar-default navbar-fixed-top">
+    <div class="container">
+      <a href="/" class="navbar-brand">Home</a>
+      <ul class="nav nav-pills">
+        <li role="presentation"><a href="/login"><b>Teach</b></a></li>
+      </ul>
+    </div>
+  </nav>
+</head>
 
-		.col-md-2 {
-			background-color: white;
-			padding: 10px;
-			margin: 15px 5px 10px 10px;
-			height: 240px;
-			box-shadow:0 3px 1px #666;
-			border-radius: 3px;
-		}
-
-		img {
-			height:75%%;
-			width:100%;
-		}
-
-		.hidden{
-			visibility:hidden;
-		}
-		h1{
-			visibility:hidden;
-		}
-		.idtag{
-			visibility:hidden;
-		}
-	</style>
-	<head>
-		<!-- Boostrap components -->
-    <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-
-		<nav class="navbar navbar-default navbar-fixed-top">
-		  <div class="container">
-			<a href="/" class="navbar-brand">Home</a>
-			<ul class="nav nav-pills">
-				<li role="presentation"><a href="/login"><b>Teach</b></a></li>
-			</ul>
-			</div>
-		</nav>
-	</head>
-
-	<body class="body">
-		<form class="hidden" id="someform" action="/newlect" method='post'>
-			<input type="text" id="sessionID" name="sessionID">
-			<input type="submit">
-		</form>
-		<br>
-		<br>
-		<br>
-		<div class="container">
-			<h1 class="text-center">Video Sections</h1>
-			<div class="row">
-				<% for(var i = 0; i < secList.length; i ++){ %>
-					<div class="col-md-2 text-center">
-						<a href="#" class="idkey" onclick="sendLink(event)"><%=nameList[i]%></a>
-						<a href="#" class="idtag"><%=secList[i]%></a>
-					</div>
-				<%	} %>
-			</div>
-		</div>
-	</body>
+<body class="body">
+  <form class="hidden" id="someform" action="/newlect" method='post'>
+    <input type="text" id="sessionID" name="sessionID">
+    <input type="submit">
+  </form>
+  <br>
+  <br>
+  <br>
+  <div class="container">
+    <h1 class="text-center">Video Sections</h1>
+    <div class="row">
+      <% for(var i = 0; i < secList.length; i ++){ %>
+        <div class="col-md-2 text-center">
+          <a href="#" class="idkey" onclick="sendLink(event)">
+            <%=nameList[i]%>
+          </a>
+          <a href="#" class="idtag">
+            <%=secList[i]%>
+          </a>
+        </div>
+        <%	} %>
+    </div>
+  </div>
+</body>
 
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
-	<script src="/socket.io/socket.io.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.4/jquery.min.js"></script>
+<script src="/socket.io/socket.io.js"></script>
 
-	<script>
-		var vids = document.getElementsByClassName("idtag");
-		var keys = document.getElementsByClassName("idkey");
-		var vid_urls = [];
-		for(var i = 0; i < vids.length; i++){
-			keys[i].id = i + 1;
-			vids[i].id = i;
-			vid_urls.push(vids[i].innerHTML);
-		}
+<script>
+  var vids = document.getElementsByClassName("idtag");
+  var keys = document.getElementsByClassName("idkey");
+  var vid_urls = [];
+  for (var i = 0; i < vids.length; i++) {
+    keys[i].id = i + 1;
+    vids[i].id = i;
+    vid_urls.push(vids[i].innerHTML);
+  }
 
-		function sendLink(event){
-			var input = document.getElementById("sessionID");
-			var val = event.target.id;
-			//Debug print statements
-			console.log("the id is " + val);
-			console.log("The link array is " + vid_urls);
+  function sendLink(event) {
+    var input = document.getElementById("sessionID");
+    var val = event.target.id;
+    //Debug print statements
+    console.log("the id is " + val);
+    console.log("The link array is " + vid_urls);
 
-			input.value = vid_urls[val - 1];
-			var someform = document.getElementById("someform");
-			someform.submit();
-		}
+    input.value = vid_urls[val - 1];
+    var someform = document.getElementById("someform");
+    someform.submit();
+  }
 
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  (function(i, s, o, g, r, a, m) {
+    i['GoogleAnalyticsObject'] = r;
+    i[r] = i[r] || function() {
+      (i[r].q = i[r].q || []).push(arguments)
+    }, i[r].l = 1 * new Date();
+    a = s.createElement(o),
+      m = s.getElementsByTagName(o)[0];
+    a.async = 1;
+    a.src = g;
+    m.parentNode.insertBefore(a, m)
+  })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-		ga('create', 'UA-68589817-1', 'auto');
-		ga('send', 'pageview');
-	</script>
+  ga('create', 'UA-68589817-1', 'auto');
+  ga('send', 'pageview');
+</script>
 
 </html>

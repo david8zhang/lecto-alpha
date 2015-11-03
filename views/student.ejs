@@ -114,13 +114,12 @@
 	<div class="sidebar-layout">
 		<body class="text-center body">
 		<br>
-		<div class="container">
-			<div id='videos'></div>
-				<h2 id="best-results">Please plug in headphones</h2>
-				<h3 id="warning-results"><em>It is not recommended that you play the video without headphones</em></h3>
-				<br>
-				<a id="openNewSessionButton" class="btn btn-primary btn-lg" role="button">OK!</a>
-		</div>
+		<div id='videos'></div>
+		<br>
+			<h2 id="best-results">Tip: Plug in headphones</h2>
+			<h3 id="warning-results"><em>It is recommended that you put in headphones for maximum audio quality</em></h3>
+			<br>
+			<a id="openNewSessionButton" class="btn btn-primary btn-lg" role="button">OK!</a>
 		<br>
 		<div class="hidden" id="keyholder"><%=room%></div>
 		<div class="container">
@@ -130,22 +129,7 @@
 					<h3><%=subject%></h3>
 				</div>
 				<div class="panel-body">
-					<form id="flag-form" action='/flag' method='post' class="hidden">
-						<label for="reason">Reason for Flagging:</label>
-						<input type="text" class="hidden" name="name">
-						<select id="school" class="box" name ="reason" maxlength="194">
-							<option value="Select">Select a Reason</option>
-							<option value="Inaccurate Info">Inaccurate Info</option>
-							<option value="Sexual Content">Sexual Content</option>
-							<option value="Drugs">Drug Content</option>
-						</select>
-						<br>
-						<br>
-						<input type="submit" class="btn alert-btn" value="Flag"/>
-					</form>
-					<a id="flag-btn" onclick="onFlag()" class="btn alert-btn" role="button">Flag Inappropriate</a>
 					<a id="feedback" href="http://goo.gl/forms/KpED1wg419" class="btn feedback-btn" role="button">Leave Feedback!</a>
-
 				</div>
 			</div>
 		</div>
@@ -168,12 +152,8 @@
 			socket.emit('adduser', [username, sessID]);
 		});
 
-		var color = getRandomColor();
-
 		//listener, whenever the server emits to 'update chat', this listens
 		socket.on('updatechat', function(username, data){
-			console.log(data);
-			console.log(username);
 			$("#chat-box").append("<b>" + username.toString() + "</b>" + ": " + data.toString());
 			$("#chat-box").append("<br>");
 			$("#chat-box").scrollTop($("#chat-box")[0].scrollHeight);
@@ -190,7 +170,7 @@
 			}
 		})
 
-		var participant = new RTCMultiConnection('sample')
+		var participant = new RTCMultiConnection(sessID)
 		var sessionDescription = {
 			sessionId: sessID,
 			session: {
@@ -202,8 +182,6 @@
 		participant.body = document.getElementById("videos");
 
 		document.getElementById("openNewSessionButton").onclick = function(){
-			document.getElementById("best-results").style.visibility = "hidden";
-			document.getElementById("warning-results").style.visibility = "hidden";
 			document.getElementById("openNewSessionButton").style.visibility = "hidden";
 			participant.join(sessionDescription);
 			var video = $("#videos").children();

@@ -1,70 +1,78 @@
 <html>
-	<style>
-		body {
-			background-color: #000000;
-			background-image:url('/images/startSession.jpg');
-			background-repeat: no-repeat;
-			background-size: 100%;
-		}
+<style>
+  body {
+    background-color: #000000;
+    background-image: url('/images/startSession.jpg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+  }
+  
+  li {
+    margin-top: 10px;
+  }
+  
+  .navbar {
+    box-shadow: 0 5px 5px #333;
+  }
+  
+  .jumbotron {
+    margin: 0;
+    opacity: 0.9;
+  }
+  
+  .center {
+    text-align: center;
+  }
+  
+  .confirmText {
+    color: #3B5323;
+  }
+</style>
 
-		li{
-			margin-top: 10px;
-		}
+<head>
+  <!-- Boostrap components -->
+  <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/animate.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
-		.navbar {
-			box-shadow: 0 5px 5px #333;
-		}
+  <nav class="navbar navbar-default navbar-fixed-top">
 
-		.jumbotron{
-			margin:0;
-			opacity: 0.9;
-		}
-		.center{
-			text-align: center;
-		}
-		.confirmText{
-			color: #3B5323;
-		}
+    <div class="container">
 
-	</style>
-	<head>
-		<!-- Boostrap components -->
-        <link href="https://bootswatch.com/flatly/bootstrap.min.css" rel="stylesheet">
-        <link rel="stylesheet" href="/animate.css">
-		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+      <a href="/dashboard" class="navbar-brand">Teach</a>
+      <ul class="nav navbar-left">
+        <li role="presentation"><a href="/category"><b>Learn</b></a></li>
+      </ul>
+    </div>
+  </nav>
+</head>
 
-		<nav class="navbar navbar-default navbar-fixed-top">
+<body>
+  <br>
+  <br>
+  <br>
+  <div class="jumbotron text-center">
+    <h3 class="confirmText center">Video Uploaded!</h3>
+    <!-- Make this Idea thing cycle through a list of ideas stored locally -->
+    <a class="btn btn-primary btn-lg" href="/dashboard" role="button">Dashboard</a>
+  </div>
 
-		  <div class="container">
+  <script>
+    (function(i, s, o, g, r, a, m) {
+      i['GoogleAnalyticsObject'] = r;
+      i[r] = i[r] || function() {
+        (i[r].q = i[r].q || []).push(arguments)
+      }, i[r].l = 1 * new Date();
+      a = s.createElement(o),
+        m = s.getElementsByTagName(o)[0];
+      a.async = 1;
+      a.src = g;
+      m.parentNode.insertBefore(a, m)
+    })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
 
-				<a href="/dashboard" class="navbar-brand">Teach</a>
-				<ul class="nav navbar-left">
-					<li role="presentation"><a href="/category"><b>Learn</b></a></li>
-				</ul>
-			</div>
-		</nav>
-	</head>
-
-	<body>
-		<br>
-		<br>
-		<br>
-		<div class="jumbotron text-center">
-			<h3 class="confirmText center">Video Uploaded!</h3>
-			<!-- Make this Idea thing cycle through a list of ideas stored locally -->
-			<a class="btn btn-primary btn-lg" href="/dashboard" role="button">Dashboard</a>
-		</div>
-
-		<script>
-		  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-		  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-		  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-		  ga('create', 'UA-68589817-1', 'auto');
-		  ga('send', 'pageview');
-
-		</script>
-	</body>
+    ga('create', 'UA-68589817-1', 'auto');
+    ga('send', 'pageview');
+  </script>
+</body>
 
 </html>
